@@ -1,44 +1,51 @@
 # Agenda — agenda.darkmatterlabs.ca
 
-Single-page agenda app + push-notification backend on Netlify.
+Agenda app with cross-device sync (Supabase) and push notifications (Netlify).
 
 ```
 index.html               the app
 sw.js                    service worker (receives pushes, opens the tapped item)
-manifest.webmanifest     makes it a proper Home Screen web app
+manifest.webmanifest     Home Screen web-app settings
 icons/                   leather app icons
+supabase.sql             database table + security rules (run once in Supabase)
 netlify/functions/
-  reminders.mjs          /api/reminders — saves each device's subscription + upcoming alerts
-  send-reminders.mjs     runs every minute, sends any alert that's due
+  config.mjs             /api/config — hands the browser your public Supabase URL + key
+  reminders.mjs          /api/reminders — stores alerts per account (or per device if signed out)
+  send-reminders.mjs     runs every minute, sends any alert that's due to every device
 netlify.toml, package.json
 ```
 
-## Deploy (one time)
+## Netlify environment variables
 
-Push notifications need the functions, so deploy from **GitHub** (or `netlify deploy --prod`), not drag-and-drop.
+| Key | Value | Secret? |
+|---|---|---|
+| `VAPID_PUBLIC_KEY` | from `npx web-push generate-vapid-keys` | no |
+| `VAPID_PRIVATE_KEY` | from the same command | **yes** |
+| `VAPID_SUBJECT` | `mailto:you@yourdomain.com` | no |
+| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL | no |
+| `SUPABASE_ANON_KEY` | Supabase → Project Settings → API → anon / publishable key | no |
 
-1. Put this folder in a GitHub repo and connect it to your Netlify site (publish dir `.`; no build command needed).
-2. Generate push keys on your computer:
-   ```
-   npx web-push generate-vapid-keys
-   ```
-3. In Netlify → Site configuration → Environment variables, add:
-   - `VAPID_PUBLIC_KEY` = the public key
-   - `VAPID_PRIVATE_KEY` = the private key (keep this secret, never in the repo)
-   - `VAPID_SUBJECT` = `mailto:you@yourdomain` (any contact email)
-4. Redeploy. Reminders are stored in Netlify Blobs automatically — no database to set up.
+Never use the Supabase `service_role` / secret key here; the app doesn't need it.
 
-## Turn it on (iPhone)
+## Supabase setup (one time)
 
-1. Open agenda.darkmatterlabs.ca in Safari → Share → **Add to Home Screen**.
-2. Open Agenda **from the Home Screen icon** (iOS only allows web push there).
-3. Tap the bell → **Enable notifications** → Allow → **Send a test notification**.
+1. Create a project at supabase.com (or reuse an existing one).
+2. **SQL Editor → New query** → paste all of `supabase.sql` → **Run**.
+3. **Authentication → Sign In / Providers → Email** → turn **off "Confirm email"**, so a new account works immediately with no email at all.
+   (Sign-in is email + password, so no email templates or custom SMTP are needed. iCloud Keychain will offer to save the password.)
+4. **Authentication → URL Configuration → Site URL** = `https://agenda.darkmatterlabs.ca`.
+5. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` in Netlify, then redeploy.
+6. Optional, after you've signed in once: **Authentication → Sign In / Providers → turn off "Allow new users to sign up"**, so nobody else can create accounts on your project.
 
-Each event/task has an **Alert** setting (none, at time, 5/10/15/30 min, 1–2 h, 1 day). Untimed tasks/all-day events alert at 9:00 AM. The bell panel lists what's scheduled and sets the default alert for new events.
+## Using it
+
+- Tap the round account button (top right) → enter your email and a password → **Create account** the first time, **Sign in** on every other device.
+- The first device you sign in on uploads its events. Other devices drop their sample events and download yours.
+- Changes appear on your other devices within a second or two while they're open. Edits made offline are saved and sync when you're back online.
+- Turn on notifications on each device you want alerts on (same panel). Alerts belong to your account, so an event added on your Mac alerts your phone.
 
 ## Notes
 
-- Your events still live on each device (localStorage). The server only receives the reminder titles and times for this device's next 45 days. Syncing events across devices (Supabase login) is a separate step.
+- You stay signed in on each device, so you'll rarely type the password.
 - Netlify scheduled functions run once a minute, so alerts land within about a minute of their time.
-- If you delete the Home Screen app or revoke permission, the server drops that subscription automatically on the next send.
-- After updating `index.html`, fully close and reopen the Home Screen app to pick up changes.
+- After updating files, fully close and reopen the Home Screen app to pick up changes.

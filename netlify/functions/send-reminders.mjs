@@ -1,4 +1,5 @@
-// Runs every minute on Netlify and pushes any reminder that has come due.
+// Runs every minute on Netlify and pushes any reminder that has come due
+// to every device subscribed to that record.
 import { getStore } from '@netlify/blobs';
 import * as webpush from 'web-push';
 
@@ -16,30 +17,34 @@ export default async () => {
 
   for (const { key } of blobs) {
     const data = await store.get(key, { type: 'json' });
-    if (!data || !data.subscription) continue;
+    if (!data) continue;
+    let subs = data.subs || (data.subscription ? [data.subscription] : []); // older records had one subscription
     const sent = new Set(data.sent || []);
     const due = (data.reminders || []).filter(r => r.at <= now + 20000 && r.at > now - GRACE_MS && !sent.has(r.id));
-    if (!due.length) continue;
 
-    let gone = false;
-    for (const r of due) {
-      try {
-        await webpush.sendNotification(data.subscription, JSON.stringify({
-          title: r.title, body: r.body, tag: r.item, item: r.item, at: r.at, url: `/?item=${encodeURIComponent(r.item)}`
-        }), { TTL: 3600, urgency: 'high' });
-        sent.add(r.id); sentCount++;
-      } catch (e) {
-        if (e.statusCode === 404 || e.statusCode === 410) { gone = true; break; } // subscription expired
-        console.log('push error', e.statusCode, e.body || e.message);
+    if (due.length && subs.length) {
+      const dead = new Set();
+      for (const r of due) {
+        const payload = JSON.stringify({ title: r.title, body: r.body, tag: r.item, item: r.item, at: r.at, url: `/?item=${encodeURIComponent(r.item)}` });
+        for (const sub of subs) {
+          if (dead.has(sub.endpoint)) continue;
+          try { await webpush.sendNotification(sub, payload, { TTL: 3600, urgency: 'high' }); sentCount++; }
+          catch (e) {
+            if (e.statusCode === 404 || e.statusCode === 410) dead.add(sub.endpoint); // device unsubscribed / app deleted
+            else console.log('push error', e.statusCode, e.body || e.message);
+          }
+        }
+        sent.add(r.id);
       }
+      subs = subs.filter(s => !dead.has(s.endpoint));
     }
-    if (gone) { await store.delete(key); continue; }
-    // drop reminders more than a day old so the blob stays small
+    if (!key.startsWith('u_') && !subs.length) { await store.delete(key); continue; }
+    if (!due.length && data.subs) continue; // nothing changed
     const keep = (data.reminders || []).filter(r => r.at > now - 864e5);
     const keepIds = new Set(keep.map(r => r.id));
-    await store.setJSON(key, { ...data, reminders: keep, sent: [...sent].filter(id => keepIds.has(id)) });
+    await store.setJSON(key, { subs, reminders: keep, sent: [...sent].filter(id => keepIds.has(id)), updated: data.updated || now });
   }
-  if (sentCount) console.log(`sent ${sentCount} reminder(s)`);
+  if (sentCount) console.log(`sent ${sentCount} push(es)`);
 };
 
 export const config = { schedule: '* * * * *' };

@@ -253,6 +253,29 @@ input,textarea{font:inherit;color:inherit}
 /* ---------- select / alerts ---------- */
 .group select{appearance:none;-webkit-appearance:none;background:rgba(118,118,128,.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 3.5l3 3 3-3' stroke='%238e8e93' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;border:0;border-radius:8px;padding:6px 28px 6px 10px;font-family:var(--mono);font-size:14px;color:var(--text);outline:0;color-scheme:dark}
 .bell{position:relative}
+.acct .ini{font-family:var(--head);font-weight:700;font-size:14px;letter-spacing:0;position:relative;z-index:1}
+.acct .ini svg{display:block}
+.acct .sring{position:absolute;inset:-3px;width:42px;height:42px;pointer-events:none}
+.acct .sring circle{fill:none;stroke-width:2;stroke-linecap:round}
+.acct .sring .trk{stroke:transparent;transition:stroke .4s}
+.acct .sring .arc{stroke:var(--accent);stroke-dasharray:30 200;opacity:0;transform-origin:50% 50%;transition:opacity .3s}
+.acct.signed{background:linear-gradient(145deg,#6a4630,#2e1f16);box-shadow:inset 0 0 0 .5px rgba(255,222,186,.3)}
+.acct.signed .sring .trk{stroke:rgba(201,154,107,.35)}
+.acct.syncing .sring .arc{opacity:1;animation:spin 1s linear infinite}
+.acct.synced .sring .trk{animation:syncFlash 1.1s var(--ease)}
+.acct.err .sring .trk{stroke:var(--red)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes syncFlash{0%{stroke:#30d158;stroke-width:3}100%{stroke:rgba(201,154,107,.35);stroke-width:2}}
+.code-in{width:100%;background:rgba(118,118,128,.16);border:0;outline:0;border-radius:14px;padding:14px;font-family:var(--head);font-size:26px;letter-spacing:.5em;text-align:center;caret-color:var(--accent)}
+.mail-in{width:100%;background:rgba(118,118,128,.16);border:0;outline:0;border-radius:14px;padding:14px 16px;font-size:16px;caret-color:var(--accent)}
+.code-in::placeholder,.mail-in::placeholder{color:#55555b}
+.acct-card{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;position:relative;overflow:hidden}
+.acct-card .av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-family:var(--head);font-weight:800;font-size:20px;color:#f3e3d0;background:linear-gradient(145deg,#8a5d3e,#3a2619);box-shadow:inset 0 0 0 1px rgba(255,222,186,.3),0 6px 18px rgba(0,0,0,.4);flex:none;position:relative;z-index:1}
+.acct-card .meta{position:relative;z-index:1;min-width:0}
+.acct-card b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.acct-card small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tan);margin-top:3px}
+.btn-row{display:flex;gap:10px}.btn-row>*{flex:1}
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--dim);padding:10px 4px 0}
 .bell .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:#30d158;box-shadow:0 0 0 2px var(--bg);transform:scale(0);transition:transform .45s var(--spring)}
 .bell.on .dot{transform:scale(1)}
 .bell.ring svg{animation:bellRing 1s var(--ease)}
@@ -363,7 +386,7 @@ input,textarea{font:inherit;color:inherit}
       <button class="icon" id="prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button class="today-btn" id="todayBtn">TODAY</button>
       <button class="icon" id="next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-      <button class="icon bell" id="bellBtn" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform-origin:50% 10%"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="dot"></i></button>
+      <button class="icon bell acct" id="bellBtn" aria-label="Account and notifications"><svg class="sring" viewBox="0 0 42 42"><circle class="trk" cx="21" cy="21" r="19.5"/><circle class="arc" cx="21" cy="21" r="19.5"/></svg><span class="ini" id="acctIni"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span><i class="dot"></i></button>
       <button class="icon add" id="addBtn" aria-label="New"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
     </div>
   </header>
@@ -399,7 +422,7 @@ input,textarea{font:inherit;color:inherit}
 
 <div class="sheet" id="nsheet" role="dialog" aria-modal="true">
   <div class="grab"><i></i></div>
-  <div class="sh-top"><span style="width:52px"></span><span class="t">NOTIFICATIONS</span><button id="nDone" class="save">Done</button></div>
+  <div class="sh-top"><span style="width:52px"></span><span class="t">ACCOUNT</span><button id="nDone" class="save">Done</button></div>
   <div class="sh-body" id="nBody"></div>
 </div>
 <div class="banners" id="banners"></div>
@@ -454,8 +477,9 @@ const S = { view: 'month', cursor: new Date(), sel: todayKey(), items: [], compl
 function load() {
   try {
     const raw = localStorage.getItem(STORE);
-    if (raw) { const d = JSON.parse(raw); S.items = d.items || []; S.view = d.view || 'month'; return; }
+    if (raw) { const d = JSON.parse(raw); S.items = d.items || []; S.view = d.view || 'month'; SYNC.dirty = new Set(d.dirty || []); SYNC.tombs = new Set(d.tombs || []); SYNC.owner = d.owner || null; SYNC.pristine = !!d.pristine; takeSnap(); return; }
   } catch (e) {}
+  SYNC.pristine = true;
   const t = new Date(), k0 = key(t), k1 = key(addDays(t, 1)), k3 = key(addDays(t, 3));
   S.items = [
     { id: uid(), type: 'event', title: 'Morning workout', date: k0, start: '07:00', end: '08:00', color: '#30d158', notes: '' },
@@ -465,8 +489,29 @@ function load() {
     { id: uid(), type: 'task', title: 'Drag a page sideways to flip it', date: k1, start: null, end: null, color: '#64d2ff', done: false },
     { id: uid(), type: 'event', title: 'Dinner', date: k3, start: '19:00', end: '21:00', color: '#ff9f0a', notes: '' },
   ];
+  takeSnap();
 }
-function save() { try { localStorage.setItem(STORE, JSON.stringify({ items: S.items, view: S.view })); } catch (e) {} if (typeof scheduleSync === 'function') { scheduleSync(); updateAppBadge(); } }
+/* ---- sync bookkeeping: every save() diffs against a snapshot to find what changed ---- */
+const SYNC = { client: null, user: null, status: 'off', err: '', last: 0, channel: null, dirty: new Set(), tombs: new Set(), owner: null, pristine: false, pulled: false, step: 'email', email: '', running: false, again: false };
+let snap = new Map();
+const fieldsOf = i => JSON.stringify([i.type, i.title, i.date || null, i.start || null, i.end || null, i.color, i.notes || '', i.alert ?? null, !!i.done, i.doneAt || null]);
+function takeSnap() { snap = new Map(S.items.map(i => [i.id, fieldsOf(i)])); }
+function trackChanges() {
+  const now = Date.now(), ids = new Set(); let changed = false;
+  for (const i of S.items) {
+    ids.add(i.id); const f = fieldsOf(i);
+    if (snap.get(i.id) !== f) { i.u = now; SYNC.dirty.add(i.id); SYNC.tombs.delete(i.id); snap.set(i.id, f); changed = true; }
+  }
+  for (const id of [...snap.keys()]) if (!ids.has(id)) { snap.delete(id); SYNC.tombs.add(id); SYNC.dirty.add(id); changed = true; }
+  if (changed) SYNC.pristine = false;
+  return changed;
+}
+function persist() { try { localStorage.setItem(STORE, JSON.stringify({ items: S.items, view: S.view, dirty: [...SYNC.dirty], tombs: [...SYNC.tombs], owner: SYNC.owner, pristine: SYNC.pristine })); } catch (e) {} }
+function save() {
+  const changed = trackChanges(); persist();
+  if (typeof scheduleSync === 'function') { scheduleSync(); updateAppBadge(); }
+  if (changed && typeof schedulePush === 'function') schedulePush();
+}
 const itemsOn = (k, incDone = true) => S.items.filter(i => i.date === k && (incDone || !(i.type === 'task' && i.done))).sort(sorter);
 function sorter(a, b) {
   const at = a.start ? toMin(a.start) : -1, bt = b.start ? toMin(b.start) : -1;
@@ -1093,13 +1138,13 @@ async function enablePush() {
     const { publicKey } = await r.json();
     if (!publicKey) throw new Error('VAPID keys are missing in Netlify environment variables.');
     PUSH.sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(publicKey) });
-    if (!(await syncReminders())) throw new Error('Subscribed, but couldn’t reach the server to save reminders.');
+    if (!(await syncReminders()) && !(SYNC.user && !SYNC.pulled)) throw new Error('Subscribed, but couldn’t reach the server to save reminders.');
     buzz([8, 50, 12]); ringBell(); toast('Notifications are on');
   } catch (e) { PUSH.err = e.message || String(e); }
   renderNotif(); updateBell(); updateAppBadge();
 }
 async function disablePush() {
-  try { await fetch(API, { method: 'DELETE', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: PUSH.sub.endpoint }) }); } catch (e) {}
+  try { await fetch(API, { method: 'DELETE', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: PUSH.sub.endpoint, token: await authToken() }) }); } catch (e) {}
   try { await PUSH.sub.unsubscribe(); } catch (e) {}
   PUSH.sub = null; renderNotif(); updateBell(); buzz(6);
 }
@@ -1112,10 +1157,16 @@ async function testPush() {
 }
 let syncT;
 function scheduleSync() { clearTimeout(syncT); syncT = setTimeout(syncReminders, 900); }
+async function authToken() { try { return SYNC.user ? (await SYNC.client.auth.getSession()).data.session?.access_token || null : null; } catch (e) { return null; } }
 async function syncReminders() {
-  if (!PUSH.sub) return false;
+  const token = await authToken();
+  if (!token && !PUSH.sub) return false;
+  if (token && !SYNC.pulled) return false; // never overwrite account alerts from a stale device before it has pulled
   try {
-    const r = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ subscription: PUSH.sub.toJSON(), reminders: reminderList() }) });
+    const body = { reminders: reminderList() };
+    if (PUSH.sub) body.subscription = PUSH.sub.toJSON();
+    if (token) body.token = token;
+    const r = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     if (r.ok) PUSH.lastSync = Date.now();
     return r.ok;
   } catch (e) { return false; }
@@ -1126,18 +1177,52 @@ function updateAppBadge() {
   const n = itemsOn(todayKey(), false).filter(i => i.type === 'task' || !i.start || toMin(i.end || i.start) >= nowMin).length;
   (n ? navigator.setAppBadge(n) : navigator.clearAppBadge()).catch(() => {});
 }
-function updateBell() { $('#bellBtn').classList.toggle('on', !!PUSH.sub); }
+function updateBell() {
+  const b = $('#bellBtn');
+  b.classList.toggle('on', !!PUSH.sub);
+  b.classList.toggle('signed', !!SYNC.user);
+  b.classList.toggle('syncing', SYNC.status === 'syncing');
+  b.classList.toggle('err', SYNC.status === 'error');
+  const ini = $('#acctIni'), letter = SYNC.user ? (SYNC.user.email || '?')[0].toUpperCase() : '';
+  if (SYNC.user && ini.textContent !== letter) { ini.textContent = letter; anim(ini, [{ transform: 'scale(.3) rotate(-30deg)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 600, easing: SPRING }); }
+  if (!SYNC.user && !ini.querySelector('svg')) ini.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
+}
 function ringBell() { const b = $('#bellBtn'); b.classList.remove('ring'); b.offsetWidth; b.classList.add('ring'); }
+function syncSectionHTML() {
+  const ago = SYNC.last ? relTime(SYNC.last) : '';
+  if (SYNC.status === 'unconfigured') return `<div class="sec-label">SYNC</div><div class="n-status"><div class="orb2" style="background:rgba(255,159,10,.18)">☁️</div><div><b>Sync isn’t set up yet</b><small>${secure ? 'Add SUPABASE_URL and SUPABASE_ANON_KEY in Netlify, then redeploy (see README).' : 'Preview mode: sign-in works once Agenda is deployed.'}</small></div></div>`;
+  if (SYNC.status === 'loading') return `<div class="sec-label">SYNC</div><div class="hint">Connecting…</div>`;
+  if (SYNC.user) {
+    const st = SYNC.status === 'syncing' ? 'SYNCING…' : SYNC.status === 'error' ? 'SYNC ERROR — WILL RETRY' : SYNC.status === 'offline' ? 'OFFLINE — CHANGES SAVED LOCALLY' : `SYNCED ${ago.toUpperCase()}${SYNC.dirty.size ? ` · ${SYNC.dirty.size} PENDING` : ''}`;
+    return `<div class="sec-label">SYNC</div>
+      <div class="acct-card leather dark"><div class="av">${esc((SYNC.user.email || '?')[0].toUpperCase())}</div><div class="meta"><b>${esc(SYNC.user.email || '')}</b><small id="syncLine">${st}</small></div></div>
+      ${SYNC.err && SYNC.status === 'error' ? `<div class="hint" style="color:#ff8a80">${esc(SYNC.err)}</div>` : ''}
+      <div class="btn-row"><button class="btn-ghost" data-n="syncnow">Sync now</button><button class="btn-ghost" data-n="signout" style="color:var(--red)">Sign out</button></div>`;
+  }
+  return `<div class="sec-label">SYNC</div>
+    <div class="n-status"><div class="orb2" style="background:rgba(201,154,107,.2)">☁️</div><div><b>Sync across your devices</b><small>Sign in to keep your iPhone, iPad and Mac in step, live.</small></div></div>
+    <input class="mail-in" id="mailIn" type="email" inputmode="email" autocomplete="username" autocapitalize="off" placeholder="Email" value="${esc(SYNC.email)}">
+    <input class="mail-in" id="pwIn" type="password" autocomplete="current-password" placeholder="Password (6+ characters)">
+    ${SYNC.err ? `<div class="hint" style="color:${SYNC.errOk ? 'var(--dim)' : '#ff8a80'}">${esc(SYNC.err)}</div>` : ''}
+    <div class="btn-row"><button class="btn-ghost" data-n="create">Create account</button><button class="btn-primary" data-n="signin">Sign in</button></div>`;
+}
+function relTime(t) { const s = Math.round((Date.now() - t) / 1000); return s < 10 ? 'just now' : s < 60 ? `${s}s ago` : s < 3600 ? `${Math.round(s / 60)} min ago` : new Date(t).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
+function renderPanel(animate) {
+  if (!$('#nsheet').classList.contains('open') && !animate) return;
+  renderNotif();
+  if (animate) stagger($$('#nBody > *'), 0, 30);
+}
 function renderNotif() {
   let icon = '🔔', bg = 'rgba(10,132,255,.18)', title, sub, actions = '';
   if (!secure) { icon = '🧪'; bg = 'rgba(255,159,10,.18)'; title = 'Preview mode'; sub = 'Push alerts work once Agenda is deployed on https (agenda.darkmatterlabs.ca). In-app banners still work here.'; }
   else if (isIOS && !standalone()) { icon = '📲'; title = 'Add to Home Screen first'; sub = 'iPhone only allows web-app notifications from the Home Screen icon.'; actions = `<div class="hint">In Safari tap <b>Share</b> → <b>Add to Home Screen</b>, then open Agenda from the icon and come back here.</div>`; }
   else if (!pushOK) { icon = '⚠️'; bg = 'rgba(255,69,58,.16)'; title = 'Not supported here'; sub = 'This browser can’t receive web push. Banners still appear while Agenda is open.'; }
   else if (Notification.permission === 'denied') { icon = '🔕'; bg = 'rgba(255,69,58,.16)'; title = 'Notifications blocked'; sub = 'Turn them on in iPhone Settings → Notifications → Agenda, then reopen the app.'; }
-  else if (PUSH.sub) { icon = '✅'; bg = 'rgba(48,209,88,.18)'; title = 'Notifications are on'; sub = 'Alerts arrive on this device even when Agenda is closed.'; actions = `<button class="btn-ghost" data-n="test">Send a test notification</button><button class="btn-ghost" data-n="off" style="color:var(--red)">Turn off on this device</button>`; }
+  else if (PUSH.sub) { icon = '✅'; bg = 'rgba(48,209,88,.18)'; title = 'Notifications are on'; sub = SYNC.user ? 'Alerts for your whole account arrive here, even when Agenda is closed.' : 'Alerts arrive on this device even when Agenda is closed.'; actions = `<button class="btn-ghost" data-n="test">Send a test notification</button><button class="btn-ghost" data-n="off" style="color:var(--red)">Turn off on this device</button>`; }
   else { title = 'Get alerts before things start'; sub = 'Lock-screen notifications for events and tasks, timed by each item’s Alert setting.'; actions = `<button class="btn-primary" data-n="on">Enable notifications</button>`; }
   const up = reminderList().filter(r => r.at > Date.now()).slice(0, 5);
-  $('#nBody').innerHTML = `
+  $('#nBody').innerHTML = syncSectionHTML() + `
+    <div class="sec-label" style="padding-top:18px">NOTIFICATIONS</div>
     <div class="n-status"><div class="orb2" style="background:${bg}">${icon}</div><div><b>${title}</b><small>${sub}</small></div></div>
     ${actions}
     ${PUSH.err ? `<div class="hint" style="color:#ff8a80">${esc(PUSH.err)}</div>` : ''}
@@ -1147,6 +1232,178 @@ function renderNotif() {
     <div class="hint">While Agenda is open, alerts also drop in as banners at the top of the screen.</div>`;
 }
 function openNotif(src) { renderNotif(); presentSheet($('#nsheet'), src); }
+
+/* ================= cloud sync (Supabase) ================= */
+const SUPA_ESM = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const TABLE = 'agenda_items';
+function setSync(status, err) {
+  SYNC.status = status; if (err !== undefined) SYNC.err = err;
+  updateBell();
+  if (status === 'ok') { const b = $('#bellBtn'); b.classList.remove('synced'); b.offsetWidth; b.classList.add('synced'); }
+  const line = $('#syncLine');
+  if (line && SYNC.user) { renderPanel(false); }
+}
+async function initSync() {
+  let cfg = null;
+  try {
+    if (window.__AGENDA_TEST_SUPABASE) cfg = { test: true };
+    else if (secure) { const r = await fetch('/api/config'); if (r.ok) cfg = await r.json(); }
+  } catch (e) {}
+  if (!cfg || (!cfg.test && (!cfg.url || !cfg.key))) { setSync('unconfigured'); return; }
+  setSync('loading');
+  try {
+    if (cfg.test) SYNC.client = window.__AGENDA_TEST_SUPABASE;
+    else {
+      const { createClient } = await import(SUPA_ESM);
+      SYNC.client = createClient(cfg.url, cfg.key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'dml.agenda.auth' } });
+    }
+    SYNC.client.auth.onAuthStateChange((ev, session) => {
+      if (ev === 'SIGNED_OUT') onSignedOut();
+      else if (session && session.user && (!SYNC.user || SYNC.user.id !== session.user.id)) onSignedIn(session.user);
+    });
+    const { data } = await SYNC.client.auth.getSession();
+    if (data && data.session) onSignedIn(data.session.user); else setSync('off');
+  } catch (e) { setSync('error', 'Couldn’t load sync: ' + (e.message || e)); }
+  addEventListener('online', () => SYNC.user && fullSync());
+  addEventListener('offline', () => SYNC.user && setSync('offline'));
+}
+async function signInPw(create) {
+  const email = ($('#mailIn')?.value || '').trim(), password = $('#pwIn')?.value || '';
+  SYNC.email = email; SYNC.err = ''; SYNC.errOk = false;
+  if (!/^\S+@\S+\.\S+$/.test(email)) return authFail('Enter a valid email address.');
+  if (password.length < 6) return authFail('Password needs at least 6 characters.');
+  if (create) {
+    const { data, error } = await SYNC.client.auth.signUp({ email, password });
+    if (error) return authFail(/registered|exists/i.test(error.message) ? 'That email already has an account — tap Sign in.' : /not allowed|disabled/i.test(error.message) ? 'New accounts are turned off for this project.' : error.message);
+    if (!data.session) { SYNC.err = 'Account created. Supabase sent a confirmation email: tap the link (it opens Safari), then come back and Sign in here.'; SYNC.errOk = true; renderPanel(true); return; }
+    return onSignedIn(data.user);
+  }
+  const { data, error } = await SYNC.client.auth.signInWithPassword({ email, password });
+  if (error) return authFail(/confirm/i.test(error.message) ? 'Confirm your email first (check your inbox), then sign in.' : /invalid/i.test(error.message) ? 'Wrong email or password.' : error.message);
+  return onSignedIn(data.user);
+}
+function authFail(msg) {
+  SYNC.err = msg; SYNC.errOk = false; renderPanel(true); buzz([20, 40, 20]);
+  const f = $('#pwIn'); if (f) anim(f, [{ transform: 'translateX(0)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(9px)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(3px)' }, { transform: 'none' }], { duration: 450 });
+}
+async function onSignedIn(user) {
+  if (SYNC.user && SYNC.user.id === user.id) return;
+  SYNC.user = user; SYNC.err = ''; if ($('#pwIn')) $('#pwIn').value = '';
+  if (SYNC.owner !== user.id) {
+    // first sign-in on this device: drop untouched sample items, otherwise upload everything local
+    if (SYNC.pristine) { S.items = []; SYNC.dirty.clear(); SYNC.tombs.clear(); }
+    else { S.items.forEach(i => { i.u = i.u || Date.now(); SYNC.dirty.add(i.id); }); }
+    SYNC.owner = user.id; SYNC.pulled = false; takeSnap(); persist();
+  }
+  updateBell(); renderPanel(true);
+  subscribeLive();
+  await fullSync(true);
+  if (PUSH.sub) syncReminders();
+}
+async function signOut() {
+  try { if (PUSH.sub) await fetch(API, { method: 'DELETE', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ endpoint: PUSH.sub.endpoint, token: await authToken() }) }); } catch (e) {}
+  try { await SYNC.client.auth.signOut(); } catch (e) {}
+  onSignedOut();
+}
+function onSignedOut() {
+  if (!SYNC.user) return;
+  try { SYNC.channel && SYNC.client.removeChannel(SYNC.channel); } catch (e) {}
+  SYNC.channel = null; SYNC.user = null; SYNC.pulled = false; SYNC.dirty.clear(); SYNC.tombs.clear(); SYNC.owner = null; persist();
+  setSync('off', ''); renderPanel(true); toast('Signed out — your agenda stays on this device');
+  if (PUSH.sub) syncReminders(); // fall back to device-only alerts
+}
+const toRow = i => ({ user_id: SYNC.user.id, id: i.id, type: i.type, title: i.title, date: i.date || null, start_time: i.start || null, end_time: i.end || null, color: i.color, notes: i.notes || '', alert: i.alert ?? null, done: !!i.done, done_at: i.doneAt || null, updated_at: i.u || Date.now(), deleted: false });
+const tombRow = id => ({ user_id: SYNC.user.id, id, type: 'event', title: null, date: null, start_time: null, end_time: null, color: null, notes: null, alert: null, done: false, done_at: null, updated_at: Date.now(), deleted: true });
+const fromRow = r => ({ id: r.id, type: r.type || 'event', title: r.title || '', date: r.date || null, start: r.start_time || null, end: r.end_time || null, color: r.color || COLORS[0], notes: r.notes || '', alert: r.alert ?? null, done: !!r.done, doneAt: r.done_at || null, u: Number(r.updated_at) || 0 });
+let pushT;
+function schedulePush() { if (!SYNC.user) return; clearTimeout(pushT); pushT = setTimeout(() => fullSync(false, true), 500); }
+async function pushDirty() {
+  if (!SYNC.dirty.size) return;
+  const ids = [...SYNC.dirty], stamp = new Map();
+  const rows = ids.map(id => { const it = S.items.find(i => i.id === id); stamp.set(id, it ? it.u : 'tomb'); return it ? toRow(it) : tombRow(id); });
+  for (let k = 0; k < rows.length; k += 500) {
+    const { error } = await SYNC.client.from(TABLE).upsert(rows.slice(k, k + 500), { onConflict: 'user_id,id' });
+    if (error) throw error;
+  }
+  for (const id of ids) { // only clear if unchanged while the request was in flight
+    const it = S.items.find(i => i.id === id);
+    if ((it && it.u === stamp.get(id)) || (!it && stamp.get(id) === 'tomb')) { SYNC.dirty.delete(id); SYNC.tombs.delete(id); }
+  }
+  persist();
+}
+async function pullAll() {
+  const rows = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await SYNC.client.from(TABLE).select('*').order('id').range(from, from + 999);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < 1000) break;
+  }
+  const seen = new Set(rows.map(r => r.id));
+  // anything local the server has never seen gets uploaded rather than lost
+  S.items.forEach(i => { if (!seen.has(i.id) && !SYNC.dirty.has(i.id)) { i.u = i.u || Date.now(); SYNC.dirty.add(i.id); } });
+  return mergeRows(rows);
+}
+function mergeRows(rows) {
+  const byId = new Map(S.items.map(i => [i.id, i])); const fresh = []; let changed = false;
+  for (const r of rows) {
+    const local = byId.get(r.id), ru = Number(r.updated_at) || 0;
+    if (SYNC.dirty.has(r.id)) { const lu = local ? (local.u || 0) : Date.now(); if (lu >= ru) continue; SYNC.dirty.delete(r.id); SYNC.tombs.delete(r.id); }
+    else if (SYNC.tombs.has(r.id)) continue;
+    if (r.deleted) { if (local) { S.items.splice(S.items.indexOf(local), 1); byId.delete(r.id); changed = true; } continue; }
+    if (local && (local.u || 0) === ru && fieldsOf(local) === fieldsOf(fromRow(r))) continue;
+    const it = fromRow(r);
+    if (local) Object.assign(local, it); else { S.items.push(it); byId.set(it.id, it); fresh.push(it.id); }
+    changed = true;
+  }
+  if (changed) { takeSnapKeepingDirty(); persist(); liveRefresh(fresh[0]); }
+  return changed;
+}
+function takeSnapKeepingDirty() {
+  // snapshot remote-applied items so they don't count as local edits; dirty ones keep their pending state
+  const old = snap; takeSnap();
+  for (const id of SYNC.dirty) if (old.has(id)) snap.set(id, old.get(id));
+}
+let liveT = null, livePop = null;
+function liveRefresh(pop) {
+  if (pop) livePop = pop;
+  clearTimeout(liveT);
+  liveT = setTimeout(() => {
+    if (busy || activeSheet === $('#sheet')) return liveRefresh();
+    const p = livePop; livePop = null; refresh(p);
+    if ($('#nsheet').classList.contains('open')) renderPanel(false);
+    scheduleSync();
+  }, 120);
+}
+async function fullSync(force, pushOnly) {
+  if (!SYNC.user || !SYNC.client) return;
+  if (SYNC.running) { SYNC.again = true; return; }
+  if (!navigator.onLine) { setSync('offline'); return; }
+  SYNC.running = true; setSync('syncing');
+  try {
+    await pushDirty();
+    if (!pushOnly || !SYNC.pulled) { await pullAll(); await pushDirty(); SYNC.pulled = true; }
+    SYNC.last = Date.now(); setSync('ok', '');
+    scheduleSync();
+  } catch (e) {
+    setSync(navigator.onLine ? 'error' : 'offline', e.message || String(e));
+    setTimeout(() => SYNC.user && fullSync(), 15000);
+  } finally {
+    SYNC.running = false;
+    if (SYNC.again) { SYNC.again = false; setTimeout(() => fullSync(false, true), 50); }
+  }
+}
+function subscribeLive() {
+  try {
+    if (SYNC.channel) SYNC.client.removeChannel(SYNC.channel);
+    SYNC.channel = SYNC.client.channel('agenda-' + SYNC.user.id)
+      .on('postgres_changes', { event: '*', schema: 'public', table: TABLE, filter: `user_id=eq.${SYNC.user.id}` }, payload => {
+        const r = payload.new && payload.new.id ? payload.new : null;
+        if (r) { mergeRows([r]); SYNC.last = Date.now(); }
+      })
+      .subscribe(status => { if (status === 'SUBSCRIBED' && SYNC.pulled) fullSync(); });
+  } catch (e) {}
+}
 
 /* in-app banners (iOS-style) */
 const shownAlerts = new Set();
@@ -1188,7 +1445,7 @@ function openItemById(id) {
   } else setTimeout(() => openSheet(it, $(`.page.current [data-id="${id}"]`) || $('#addBtn')), 60);
 }
 setInterval(checkDue, 15000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkDue(); if (PUSH.sub && Date.now() - PUSH.lastSync > 6e5) syncReminders(); const p = $('.page.current'); if (p) drawNow(p); } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkDue(); if (SYNC.user) fullSync(); else if (PUSH.sub && Date.now() - PUSH.lastSync > 6e5) syncReminders(); const p = $('.page.current'); if (p) drawNow(p); } });
 
 /* ================= events ================= */
 function bind() {
@@ -1200,10 +1457,15 @@ function bind() {
   $('#brand').onclick = replayIntro;
   $('#bellBtn').onclick = e => openNotif(e.currentTarget);
   $('#nDone').onclick = closeSheet;
+  $('#nBody').addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (e.target.id === 'mailIn') $('#pwIn')?.focus(); else if (e.target.id === 'pwIn') signInPw(false);
+  });
+
   $('#nBody').addEventListener('click', e => {
     const b = e.target.closest('[data-n]'); if (!b) return;
     b.disabled = true;
-    ({ on: enablePush, off: disablePush, test: testPush })[b.dataset.n]().finally(() => { b.disabled = false; });
+    ({ on: enablePush, off: disablePush, test: testPush, signin: () => signInPw(false), create: () => signInPw(true), signout: signOut, syncnow: () => fullSync(true) })[b.dataset.n]().finally(() => { b.disabled = false; });
   });
   $('#nBody').addEventListener('change', e => { if (e.target.id === 'nDefault') { prefs.defaultAlert = e.target.value === 'none' ? 'none' : +e.target.value; savePrefs(); buzz(4); } });
 
@@ -1398,6 +1660,7 @@ prepIntro();
 const fontsReady = document.fonts ? Promise.race([document.fonts.ready, sleep(1200)]) : Promise.resolve();
 fontsReady.then(() => { syncSeg(false); placeRing($('.page.current'), true); playIntro(); });
 initPush();
+initSync();
 })();
 </script>
 </body>
