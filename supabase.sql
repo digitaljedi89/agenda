@@ -21,6 +21,11 @@ create table if not exists public.agenda_items (
 
 alter table public.agenda_items enable row level security;
 
+-- Newer Supabase projects don't expose tables to the app automatically: allow signed-in users only.
+-- (Row-level security below still limits each person to their own rows. Signed-out visitors get nothing.)
+grant select, insert, update, delete on public.agenda_items to authenticated;
+revoke all on public.agenda_items from anon;
+
 drop policy if exists "agenda: read own"   on public.agenda_items;
 drop policy if exists "agenda: insert own" on public.agenda_items;
 drop policy if exists "agenda: update own" on public.agenda_items;

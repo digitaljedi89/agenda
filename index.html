@@ -1046,7 +1046,9 @@ function commitSheet() {
   let id;
   if (editing) { Object.assign(editing, data); id = editing.id; }
   else { id = uid(); S.items.push({ id, done: false, ...data }); }
+  const isNew = !editing;
   save(); closeSheet(); buzz([6, 30, 10]);
+  if (isNew) notifyCreated(S.items.find(i => i.id === id));
   // navigate to the item's day if it's off-screen
   if (data.date && S.view !== 'tasks' && data.date !== S.sel) {
     const was = S.sel; S.sel = data.date;
@@ -1226,6 +1228,7 @@ function renderNotif() {
     <div class="n-status"><div class="orb2" style="background:${bg}">${icon}</div><div><b>${title}</b><small>${sub}</small></div></div>
     ${actions}
     ${PUSH.err ? `<div class="hint" style="color:#ff8a80">${esc(PUSH.err)}</div>` : ''}
+    ${SYNC.user ? `<div class="group"><div class="r"><label>Notify my other devices when I add something</label><button class="switch ${prefs.notifyNew !== false ? 'on' : ''}" data-n="togglenew" role="switch" aria-checked="${prefs.notifyNew !== false}"></button></div></div>` : ''}
     <div class="group"><div class="r"><label>Default alert for new events</label><select id="nDefault">${[['none', 'None'], ['0', 'At time'], ['5', '5 min'], ['10', '10 min'], ['15', '15 min'], ['30', '30 min'], ['60', '1 hour'], ['1440', '1 day']].map(([v, l]) => `<option value="${v}" ${String(prefs.defaultAlert) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div></div>
     <div class="sec-h" style="padding:6px 4px 0">SCHEDULED ALERTS <span class="count">${up.length}</span></div>
     <div class="list">${up.length ? up.map(r => `<div class="row" data-id="${r.item}" style="--c:${r.color}"><span class="bar"></span><div class="txt"><b>${esc(r.title)}</b><small>${esc(r.body.toUpperCase())}</small></div><div class="when">${new Date(r.at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }).toUpperCase()}<br>${new Date(r.at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}</div></div>`).join('') : `<div class="hint" style="padding:6px 4px">Nothing scheduled. Give an event an Alert to see it here.</div>`}</div>
@@ -1384,6 +1387,7 @@ async function fullSync(force, pushOnly) {
     await pushDirty();
     if (!pushOnly || !SYNC.pulled) { await pullAll(); await pushDirty(); SYNC.pulled = true; }
     SYNC.last = Date.now(); setSync('ok', '');
+    if (pendingOpenId && S.items.some(i => i.id === pendingOpenId)) setTimeout(() => openItemById(pendingOpenId), 150);
     scheduleSync();
   } catch (e) {
     setSync(navigator.onLine ? 'error' : 'offline', e.message || String(e));
@@ -1402,6 +1406,27 @@ function subscribeLive() {
         if (r) { mergeRows([r]); SYNC.last = Date.now(); }
       })
       .subscribe(status => { if (status === 'SUBSCRIBED' && SYNC.pulled) fullSync(); });
+  } catch (e) {}
+}
+
+/* "new item" pushes to the account's other devices */
+function deviceName() {
+  const ua = navigator.userAgent;
+  if (/iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'iPad';
+  if (/iPhone/.test(ua)) return 'iPhone';
+  if (/Android/.test(ua)) return 'Android';
+  if (/Macintosh/.test(ua)) return 'Mac';
+  if (/Windows/.test(ua)) return 'PC';
+  return 'another device';
+}
+async function notifyCreated(it) {
+  if (!it || !SYNC.user || prefs.notifyNew === false) return;
+  const when = it.date ? fromKey(it.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }) + (it.start ? ` at ${fmt(it.start)}` : it.type === 'task' ? '' : ' · all-day') : '';
+  const body = `New ${it.type}${when ? ' · ' + when : ''} · added on ${deviceName()}`;
+  await sleep(1200); // let the item reach the database first, so tapping the notification can open it
+  const token = await authToken(); if (!token) return;
+  try {
+    await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'created', token, exclude: PUSH.sub ? PUSH.sub.endpoint : null, item: { id: it.id, title: it.title, body } }) });
   } catch (e) {}
 }
 
@@ -1436,8 +1461,11 @@ function showBanner(r) {
     dy = 0;
   });
 }
+let pendingOpenId = null;
 function openItemById(id) {
-  const it = S.items.find(i => i.id === id); if (!it) return;
+  const it = S.items.find(i => i.id === id);
+  if (!it) { if (SYNC.user) { pendingOpenId = id; fullSync(); } return; } // not synced here yet: open once it arrives
+  pendingOpenId = null;
   if (activeSheet) closeSheet();
   if (it.date && S.view !== 'tasks' && it.date !== S.sel) {
     const dir = it.date > S.sel ? 1 : -1; S.sel = it.date; S.cursor = fromKey(it.date);
@@ -1465,7 +1493,7 @@ function bind() {
   $('#nBody').addEventListener('click', e => {
     const b = e.target.closest('[data-n]'); if (!b) return;
     b.disabled = true;
-    ({ on: enablePush, off: disablePush, test: testPush, signin: () => signInPw(false), create: () => signInPw(true), signout: signOut, syncnow: () => fullSync(true) })[b.dataset.n]().finally(() => { b.disabled = false; });
+    ({ on: enablePush, off: disablePush, test: testPush, signin: () => signInPw(false), create: () => signInPw(true), signout: signOut, syncnow: () => fullSync(true), togglenew: async () => { prefs.notifyNew = prefs.notifyNew === false; savePrefs(); b.classList.toggle('on', prefs.notifyNew); b.setAttribute('aria-checked', prefs.notifyNew); buzz(4); } })[b.dataset.n]().finally(() => { b.disabled = false; });
   });
   $('#nBody').addEventListener('change', e => { if (e.target.id === 'nDefault') { prefs.defaultAlert = e.target.value === 'none' ? 'none' : +e.target.value; savePrefs(); buzz(4); } });
 

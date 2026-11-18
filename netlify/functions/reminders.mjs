@@ -62,6 +62,27 @@ export default async (req) => {
     } catch (e) { return new Response(`Push failed (${e.statusCode || ''}) ${e.body || e.message}`, { status: 502 }); }
   }
 
+  if (body.action === 'created') {
+    // push "new item" to every device on the account except the one that created it
+    const uid = await userIdFromToken(body.token);
+    if (!uid) return new Response('Not signed in', { status: 401 });
+    if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return Response.json({ ok: true, sent: 0 });
+    webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
+    const it = body.item || {};
+    const id = String(it.id || '').slice(0, 40);
+    const payload = JSON.stringify({ title: String(it.title || 'New item').slice(0, 120), body: String(it.body || '').slice(0, 200), tag: 'new-' + id, item: id, url: `/?item=${encodeURIComponent(id)}` });
+    const key = 'u_' + uid;
+    const data = await store.get(key, { type: 'json' });
+    const subs = (data && data.subs || []).filter(s => s.endpoint !== body.exclude);
+    const dead = new Set(); let sent = 0;
+    await Promise.all(subs.map(async sub => {
+      try { await webpush.sendNotification(sub, payload, { TTL: 86400, urgency: 'normal' }); sent++; }
+      catch (e) { if (e.statusCode === 404 || e.statusCode === 410) dead.add(sub.endpoint); }
+    }));
+    if (dead.size) await store.setJSON(key, { ...data, subs: data.subs.filter(s => !dead.has(s.endpoint)) });
+    return Response.json({ ok: true, sent });
+  }
+
   const reminders = cleanReminders(body.reminders);
   const ids = new Set(reminders.map(r => r.id));
   const sub = body.subscription && validSub(body.subscription) ? body.subscription : null;
