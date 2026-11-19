@@ -66,7 +66,8 @@ input,textarea{font:inherit;color:inherit}
 #app{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;background:rgba(7,7,10,.35);transform-origin:50% 0;transition:transform .55s var(--ease),filter .55s var(--ease),border-radius .55s var(--ease)}
 #app.recessed{transform:scale(.94) translateY(14px);filter:brightness(.55) saturate(.8);border-radius:22px;overflow:hidden}
 .topbar{display:flex;align-items:center;gap:18px;padding:calc(18px + var(--sat)) max(26px,env(safe-area-inset-right,0px)) 14px max(26px,env(safe-area-inset-left,0px));position:relative;z-index:5}
-.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:calc(var(--sat) + 12px);background:linear-gradient(#07070a 60%,rgba(7,7,10,0));pointer-events:none;z-index:-1}
+.topbar::before{content:"";position:absolute;left:0;right:0;top:0;height:calc(var(--sat) + 18px);background:linear-gradient(#07070a calc(100% - 18px),rgba(7,7,10,0));pointer-events:none;z-index:-1}
+#statusShield{position:fixed;left:0;right:0;top:0;height:var(--sat);background:#07070a;z-index:42;pointer-events:none}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:13px;letter-spacing:.28em;color:var(--text);opacity:.92}
 .brand .mark{width:26px;height:26px;border-radius:8px;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 4px 14px rgba(0,0,0,.4)}
 .brand .mark::after{inset:4px;border-radius:5px}
@@ -372,7 +373,7 @@ input,textarea{font:inherit;color:inherit}
 @media (max-width:1100px){.side{width:290px}.seg button{padding:7px 12px}}
 @media (max-width:900px){
   .side{display:none}
-  .topbar{padding:calc(max(var(--sat),10px) + 10px) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));gap:10px;flex-wrap:nowrap}
+  .topbar{padding:calc(max(var(--sat),10px) + 14px) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));gap:10px;flex-wrap:nowrap}
   .brand span.txt{display:none}
   #prev,#next{display:none}
   .title{overflow:hidden;gap:8px;padding:2px 0}
@@ -414,6 +415,7 @@ input,textarea{font:inherit;color:inherit}
 </head>
 <body>
 <div class="ambient"><i></i><i></i><i></i></div>
+<div id="statusShield"></div>
 
 <div id="app">
   <header class="topbar">
@@ -1059,7 +1061,7 @@ function presentSheet(sheet, source, prep) {
   sheet.classList.add('open');
   const mobile = isMobile(), grab = sheet.querySelector('.grab');
   if (mobile) {
-    sheet.style.cssText = 'left:0;right:0;top:auto;bottom:0;width:100%;transform:none;border-radius:26px 26px 0 0;max-height:92vh;padding-bottom:var(--safe-b)';
+    sheet.style.cssText = 'left:0;right:0;top:auto;bottom:0;width:100%;transform:none;border-radius:26px 26px 0 0;max-height:calc(100% - var(--sat) - 14px);padding-bottom:var(--safe-b)';
     grab.style.display = 'flex';
   } else { sheet.style.cssText = ''; grab.style.display = 'none'; }
   prep && prep();
@@ -1968,7 +1970,9 @@ function initSafeArea() {
     const env = probe.offsetHeight;
     const portrait = innerHeight > innerWidth;
     // some iOS builds report 0 inside Home Screen apps; Dynamic Island phones need ~59px
-    const fallback = isIOS && standalone() && portrait && env === 0 && Math.max(screen.width, screen.height) >= 812 ? 59 : 0;
+    const tall = Math.max(screen.width, screen.height);
+    // Home Screen web apps on Dynamic Island iPhones (852pt+ tall) need ~62pt; iOS 26 sometimes under-reports it
+    const fallback = isIOS && standalone() && portrait ? (tall >= 852 ? 62 : tall >= 812 ? 50 : 0) : 0;
     document.documentElement.style.setProperty('--sat', Math.max(env, fallback) + 'px');
     // iOS 26 nudges the visual viewport upward after render / keyboard close — put it back
     const vv = window.visualViewport;
