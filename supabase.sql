@@ -16,8 +16,12 @@ create table if not exists public.agenda_items (
   done_at     bigint,
   updated_at  bigint  not null default (extract(epoch from now()) * 1000)::bigint,
   deleted     boolean not null default false,
+  cal         text,              -- Apple calendar this event is also saved to (null = Agenda only)
   primary key (user_id, id)
 );
+
+-- added in v3.4 (Apple Calendar). Safe to run on an existing table:
+alter table public.agenda_items add column if not exists cal text;
 
 alter table public.agenda_items enable row level security;
 

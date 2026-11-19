@@ -20,7 +20,7 @@ export default async () => {
     if (!data) continue;
     let subs = data.subs || (data.subscription ? [data.subscription] : []); // older records had one subscription
     const sent = new Set(data.sent || []);
-    const due = (data.reminders || []).filter(r => r.at <= now + 20000 && r.at > now - GRACE_MS && !sent.has(r.id));
+    const due = [...(data.reminders || []), ...(data.feedReminders || [])].filter(r => r.at <= now + 20000 && r.at > now - GRACE_MS && !sent.has(r.id));
 
     if (due.length && subs.length) {
       const dead = new Set();
@@ -41,8 +41,9 @@ export default async () => {
     if (!key.startsWith('u_') && !subs.length) { await store.delete(key); continue; }
     if (!due.length && data.subs) continue; // nothing changed
     const keep = (data.reminders || []).filter(r => r.at > now - 864e5);
-    const keepIds = new Set(keep.map(r => r.id));
-    await store.setJSON(key, { subs, reminders: keep, sent: [...sent].filter(id => keepIds.has(id)), updated: data.updated || now });
+    const keepFeed = (data.feedReminders || []).filter(r => r.at > now - 864e5);
+    const keepIds = new Set([...keep, ...keepFeed].map(r => r.id));
+    await store.setJSON(key, { ...data, subs, reminders: keep, feedReminders: keepFeed, sent: [...sent].filter(id => keepIds.has(id)), updated: data.updated || now });
   }
   if (sentCount) console.log(`sent ${sentCount} push(es)`);
 };

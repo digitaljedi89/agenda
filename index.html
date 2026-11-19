@@ -221,6 +221,7 @@ input,textarea{font:inherit;color:inherit}
 .sh-top button:disabled{opacity:.35}
 .sh-top .t{font-family:var(--head);font-size:13px;letter-spacing:.2em;font-weight:700}
 .sh-body{overflow:auto;padding:6px 18px 20px;display:flex;flex-direction:column;gap:14px}
+.sh-body>*{flex-shrink:0}
 .f-title{width:100%;background:none;border:0;outline:0;font-size:24px;font-weight:700;padding:10px 2px;caret-color:var(--accent)}
 .f-title::placeholder{color:#55555b}
 .group{background:rgba(118,118,128,.12);border-radius:14px;overflow:hidden}
@@ -300,6 +301,47 @@ input,textarea{font:inherit;color:inherit}
 .banner b{display:block;font-size:14.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .banner small{display:block;font-size:13px;color:#c7c7cc;margin-top:1px}
 .banner .cbar{width:4px;align-self:stretch;border-radius:2px;background:var(--c);flex:none}
+
+/* ---------- Apple calendar ---------- */
+.sheet.no-cal .g-cal,.sheet.ro .g-cal{display:none}
+.cal-note{font-size:12.5px;color:var(--dim);padding:0 14px 12px;line-height:1.4;display:none}
+.cal-note.on{display:block}
+.cal-note b{color:var(--text);font-weight:600}
+.apple-cal{display:flex;align-items:center;gap:12px;padding:11px 14px}
+.apple-cal+.apple-cal{border-top:.5px solid var(--line)}
+.apple-cal .dot{width:12px;height:12px;border-radius:50%;background:var(--c);flex:none}
+.apple-cal .fi{flex:1;min-width:0}
+.apple-cal b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apple-cal small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--dim);margin-top:2px}
+.apple-cal .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--dim)}
+.row .applemark{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--tan);margin-left:6px}
+.pending-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--tan);margin-left:6px;vertical-align:middle;animation:float 1.6s ease-in-out infinite}
+
+/* ---------- shared calendars ---------- */
+.chip.shared{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 24%,transparent) 0 5px,color-mix(in srgb,var(--c) 11%,transparent) 5px 10px)}
+.chip.shared::before{background:repeating-linear-gradient(var(--c) 0 3px,transparent 3px 5px)}
+.ev.shared{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 26%,rgba(20,20,24,.85)) 0 7px,color-mix(in srgb,var(--c) 15%,rgba(20,20,24,.85)) 7px 14px);box-shadow:inset 3px 0 0 var(--c),inset 0 0 0 1px color-mix(in srgb,var(--c) 35%,transparent),0 4px 14px rgba(0,0,0,.25)}
+.row.shared .bar{background:repeating-linear-gradient(var(--c) 0 4px,transparent 4px 7px);box-shadow:none}
+.from-pill{display:none;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;padding:2px 2px 0}
+.from-pill i{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.sheet.ro .from-pill{display:flex}
+.sheet.ro .g-alert,.sheet.ro .g-colors,.sheet.ro #fType,.sheet.ro #fAllDay,.sheet.ro #shCancel{display:none}
+.sheet.ro .sh-body input,.sheet.ro .sh-body textarea{pointer-events:none}
+.sheet.ro .r:has(#fType),.sheet.ro .r:has(#fAllDay){display:none}
+.sheet.ro .group input[type=date],.sheet.ro .group input[type=time]{background:none}
+.feed-row{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.feed-row+.feed-row{border-top:.5px solid var(--line)}
+.feed-row .dot{width:12px;height:12px;border-radius:50%;background:var(--c);flex:none;box-shadow:0 0 10px color-mix(in srgb,var(--c) 70%,transparent)}
+.feed-row .fi{flex:1;min-width:0}
+.feed-row b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed-row small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--dim);margin-top:2px}
+.feed-row small.bad{color:#ff8a80}
+.feed-row select{max-width:96px}
+.feed-x{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(118,118,128,.2);color:var(--dim);font-size:15px;flex:none;transition:all .3s var(--spring)}
+.feed-x.armed{width:auto;padding:0 10px;border-radius:14px;background:rgba(255,69,58,.18);color:var(--red);font-size:12px;font-family:var(--mono);letter-spacing:.1em}
+.howto{font-size:12.5px;color:var(--dim);line-height:1.55;padding:2px 4px}
+.howto ol{margin:6px 0 0;padding-left:18px}
+.howto b{color:var(--text);font-weight:600}
 
 /* ---------- toast ---------- */
 .toast{position:fixed;left:50%;bottom:calc(28px + var(--safe-b));z-index:60;transform:translate(-50%,calc(100% + 60px));display:flex;align-items:center;gap:16px;padding:12px 14px 12px 20px;border-radius:18px;background:rgba(40,40,44,.9);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.14),0 20px 50px rgba(0,0,0,.5);font-size:14px;transition:transform .6s var(--spring),visibility 0s .6s;visibility:hidden;white-space:nowrap;max-width:calc(100vw - 32px)}
@@ -401,6 +443,7 @@ input,textarea{font:inherit;color:inherit}
   <div class="grab" id="grab"><i></i></div>
   <div class="sh-top"><button id="shCancel">Cancel</button><span class="t" id="shTitle">NEW EVENT</span><button class="save" id="shSave">Add</button></div>
   <div class="sh-body">
+    <div class="from-pill" id="fFrom"></div>
     <input class="f-title" id="fTitle" placeholder="Title" autocomplete="off">
     <div class="group">
       <div class="r"><label>Type</label><div class="mini-seg" id="fType"><i class="pill"></i><button data-t="event">Event</button><button data-t="task">Task</button></div></div>
@@ -411,10 +454,11 @@ input,textarea{font:inherit;color:inherit}
         <div class="r" style="border-top:.5px solid var(--line)"><label>Ends</label><input type="time" id="fEnd"></div>
       </div></div>
     </div>
-    <div class="group"><div class="r"><label>Alert</label><select id="fAlert">
+    <div class="group g-cal"><div class="r"><label>Calendar</label><select id="fCal"></select></div><div class="cal-note" id="calNote"></div></div>
+    <div class="group g-alert"><div class="r"><label>Alert</label><select id="fAlert">
       <option value="none">None</option><option value="0">At time of event</option><option value="5">5 min before</option><option value="10">10 min before</option><option value="15">15 min before</option><option value="30">30 min before</option><option value="60">1 hour before</option><option value="120">2 hours before</option><option value="1440">1 day before</option>
     </select></div></div>
-    <div class="group"><div class="r"><div class="swatches" id="fColors"></div></div></div>
+    <div class="group g-colors"><div class="r"><div class="swatches" id="fColors"></div></div></div>
     <div class="group"><textarea id="fNotes" placeholder="Notes"></textarea></div>
     <button class="del" id="fDelete">Delete</button>
   </div>
@@ -494,15 +538,16 @@ function load() {
 /* ---- sync bookkeeping: every save() diffs against a snapshot to find what changed ---- */
 const SYNC = { client: null, user: null, status: 'off', err: '', last: 0, channel: null, dirty: new Set(), tombs: new Set(), owner: null, pristine: false, pulled: false, step: 'email', email: '', running: false, again: false };
 let snap = new Map();
-const fieldsOf = i => JSON.stringify([i.type, i.title, i.date || null, i.start || null, i.end || null, i.color, i.notes || '', i.alert ?? null, !!i.done, i.doneAt || null]);
+const fieldsOf = i => JSON.stringify([i.type, i.title, i.date || null, i.start || null, i.end || null, i.color, i.notes || '', i.alert ?? null, !!i.done, i.doneAt || null, i.cal || null]);
+const calOfSnap = f => { try { return f ? JSON.parse(f)[10] || null : null; } catch (e) { return null; } };
 function takeSnap() { snap = new Map(S.items.map(i => [i.id, fieldsOf(i)])); }
 function trackChanges() {
   const now = Date.now(), ids = new Set(); let changed = false;
   for (const i of S.items) {
     ids.add(i.id); const f = fieldsOf(i);
-    if (snap.get(i.id) !== f) { i.u = now; SYNC.dirty.add(i.id); SYNC.tombs.delete(i.id); snap.set(i.id, f); changed = true; }
+    if (snap.get(i.id) !== f) { const prev = snap.get(i.id); if (i.cal || calOfSnap(prev)) appleEnqueue(i.id, calOfSnap(prev)); i.u = now; SYNC.dirty.add(i.id); SYNC.tombs.delete(i.id); snap.set(i.id, f); changed = true; }
   }
-  for (const id of [...snap.keys()]) if (!ids.has(id)) { snap.delete(id); SYNC.tombs.add(id); SYNC.dirty.add(id); changed = true; }
+  for (const id of [...snap.keys()]) if (!ids.has(id)) { const pc = calOfSnap(snap.get(id)); if (pc) appleEnqueue(id, pc); snap.delete(id); SYNC.tombs.add(id); SYNC.dirty.add(id); changed = true; }
   if (changed) SYNC.pristine = false;
   return changed;
 }
@@ -512,7 +557,9 @@ function save() {
   if (typeof scheduleSync === 'function') { scheduleSync(); updateAppBadge(); }
   if (changed && typeof schedulePush === 'function') schedulePush();
 }
-const itemsOn = (k, incDone = true) => S.items.filter(i => i.date === k && (incDone || !(i.type === 'task' && i.done))).sort(sorter);
+const allItems = () => FEEDS.items.length ? S.items.concat(FEEDS.items) : S.items;
+const findItem = id => S.items.find(i => i.id === id) || FEEDS.items.find(i => i.id === id);
+const itemsOn = (k, incDone = true) => allItems().filter(i => i.date === k && (incDone || !(i.type === 'task' && i.done))).sort(sorter);
 function sorter(a, b) {
   const at = a.start ? toMin(a.start) : -1, bt = b.start ? toMin(b.start) : -1;
   if (at !== bt) return at - bt;
@@ -524,10 +571,12 @@ const openTasks = () => S.items.filter(i => i.type === 'task' && !i.done);
 function rowHTML(i, opts = {}) {
   const isTask = i.type === 'task';
   const when = i.start ? `${fmt(i.start)}${i.end ? '<br>' + fmt(i.end) : ''}` : (isTask ? '' : 'ALL-DAY');
-  const sub = opts.showDate && i.date ? fromKey(i.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase() : (isTask ? 'TASK' : (i.notes ? esc(i.notes).slice(0, 40) : 'EVENT'));
-  return `<div class="row ${isTask && i.done ? 'done' : ''}" data-id="${i.id}" style="--c:${i.color}">
+  const sub = i.readonly && !opts.showDate ? '↗ ' + esc(i.feedName.toUpperCase()) : opts.showDate && i.date ? fromKey(i.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase() + (i.readonly ? ' · ↗ ' + esc(i.feedName.toUpperCase()) : '') : (isTask ? 'TASK' : (i.notes ? esc(i.notes).slice(0, 40) : 'EVENT'));
+  const calName = !i.readonly && i.cal ? (APPLE.calendars.find(c => c.id === i.cal) || {}).name : null;
+  const subFull = calName ? `${sub} · ↗ ${esc(calName.toUpperCase())}${APPLE.queue.has(i.id) ? '<span class="pending-dot" title="Waiting to reach Apple Calendar"></span>' : ''}` : sub;
+  return `<div class="row ${isTask && i.done ? 'done' : ''} ${i.readonly ? 'shared' : ''}" data-id="${i.id}" style="--c:${i.color}">
     ${isTask ? `<button class="check" data-act="check" aria-label="Complete"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5"/><path d="M7.5 12.4l3 3 6-6.6"/></svg></button>` : `<span class="bar"></span>`}
-    <div class="txt"><b>${esc(i.title)}</b><small>${sub}</small></div>
+    <div class="txt"><b>${esc(i.title)}</b><small>${subFull}</small></div>
     ${opts.restore ? `<button class="restore" data-act="restore">RESTORE</button>` : `<div class="when">${when}</div>`}
   </div>`;
 }
@@ -541,7 +590,7 @@ function renderMonth() {
     const d = addDays(start, n), k = key(d), its = itemsOn(k, false);
     const out = d.getMonth() !== c.getMonth();
     const max = 3;
-    const chips = its.slice(0, max).map(i => `<i class="chip" style="--c:${i.color}">${esc(i.title)}</i>`).join('') + (its.length > max ? `<i class="chip more">+${its.length - max} MORE</i>` : '');
+    const chips = its.slice(0, max).map(i => `<i class="chip ${i.readonly ? 'shared' : ''}" style="--c:${i.color}">${esc(i.title)}</i>`).join('') + (its.length > max ? `<i class="chip more">+${its.length - max} MORE</i>` : '');
     cells += `<button class="cell ${out ? 'out' : ''} ${k === tk ? 'today' : ''} ${d.getDay() % 6 === 0 ? 'wkend' : ''}" data-day="${k}" data-n="${n}"><span class="num">${d.getDate()}</span><div class="chips">${chips}</div></button>`;
   }
   const sel = fromKey(S.sel), selItems = itemsOn(S.sel);
@@ -570,13 +619,13 @@ function laneLayout(evs) {
 function timelineHTML(days) {
   const tk = todayKey(), H = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hour')) || 52;
   const head = days.map(d => { const k = key(d); return `<button class="d ${k === tk ? 'today' : ''} ${k === S.sel ? 'sel' : ''}" data-day="${k}" data-zoom="1"><small>${DOW[d.getDay()]}</small><b>${d.getDate()}</b></button>`; }).join('');
-  const allday = days.map(d => `<div class="c">${itemsOn(key(d)).filter(i => !i.start).map(i => `<i class="chip" data-id="${i.id}" style="--c:${i.color};cursor:pointer;${i.done ? 'opacity:.45;text-decoration:line-through' : ''}">${esc(i.title)}</i>`).join('')}</div>`).join('');
+  const allday = days.map(d => `<div class="c">${itemsOn(key(d)).filter(i => !i.start).map(i => `<i class="chip ${i.readonly ? 'shared' : ''}" data-id="${i.id}" style="--c:${i.color};cursor:pointer;${i.done ? 'opacity:.45;text-decoration:line-through' : ''}">${esc(i.title)}</i>`).join('')}</div>`).join('');
   let hours = ''; for (let h = 1; h < 24; h++) hours += `<span style="top:${h * H}px">${(h % 12 || 12)} ${h < 12 ? 'AM' : 'PM'}</span>`;
   const cols = days.map(d => {
     const k = key(d), evs = itemsOn(k).filter(i => i.start);
     const blocks = laneLayout(evs).map(g => {
       const top = g.s / 60 * H, h = Math.max(22, (g.en - g.s) / 60 * H - 2), w = 100 / g.n;
-      return `<button class="ev" data-id="${g.e.id}" style="--c:${g.e.color};top:${top}px;height:${h}px;left:calc(${g.lane * w}% + 3px);right:auto;width:calc(${w}% - 6px)">${esc(g.e.title)}<small>${fmt(g.e.start)}${g.e.end ? ' – ' + fmt(g.e.end) : ''}</small></button>`;
+      return `<button class="ev ${g.e.readonly ? 'shared' : ''}" data-id="${g.e.id}" style="--c:${g.e.color};top:${top}px;height:${h}px;left:calc(${g.lane * w}% + 3px);right:auto;width:calc(${w}% - 6px)">${esc(g.e.title)}<small>${fmt(g.e.start)}${g.e.end ? ' – ' + fmt(g.e.end) : ''}</small></button>`;
     }).join('');
     return `<div class="col ${k === tk ? 'today' : ''}" data-col="${k}">${blocks}</div>`;
   }).join('');
@@ -633,7 +682,7 @@ function updateTitle(dir = 1) { const [a, b] = titleText(); rollText($('#title')
 function renderSide(dir = 1) {
   const side = $('#sideInner'); if (!side || isMobile()) return;
   const d = fromKey(S.sel), its = itemsOn(S.sel);
-  const up = S.items.filter(i => i.date && i.date > S.sel && !(i.type === 'task' && i.done)).sort((a, b) => a.date.localeCompare(b.date) || sorter(a, b)).slice(0, 4);
+  const up = allItems().filter(i => i.date && i.date > S.sel && !(i.type === 'task' && i.done)).sort((a, b) => a.date.localeCompare(b.date) || sorter(a, b)).slice(0, 4);
   const html = `<div class="s-date"><div class="s-day" id="sDay"></div><div class="s-meta"><div class="wd">${DOWL[d.getDay()]}</div><div class="mo">${MONTHS[d.getMonth()]} ${d.getFullYear()}</div></div></div>
     <div class="s-rule"></div>
     <div class="s-scroll"><div class="sec-h" style="padding-left:2px">AGENDA <span class="count">${its.length}</span></div>
@@ -966,6 +1015,7 @@ function setType(t, animate = true) {
   pill.style.left = btn.offsetLeft + 'px'; pill.style.width = btn.offsetWidth + 'px';
   if (!animate) { pill.offsetWidth; pill.style.transition = ''; }
   $('#adLbl').textContent = t === 'task' ? 'Set a time' : 'All-day';
+  $('#sheet').classList.toggle('no-cal', t === 'task' || !writableCals().length);
   syncAllDay();
   if (!editing) $('#shTitle').textContent = t === 'task' ? 'NEW TASK' : 'NEW EVENT';
 }
@@ -991,6 +1041,12 @@ function openSheet(item, source, preset = {}) {
   $('#fDelete').style.display = item ? '' : 'none';
   $('#shTitle').textContent = item ? (t === 'task' ? 'EDIT TASK' : 'EDIT EVENT') : (t === 'task' ? 'NEW TASK' : 'NEW EVENT');
   $('#shSave').textContent = item ? 'Done' : 'Add';
+  const ro = !!d.readonly, sh = $('#sheet');
+  sh.classList.toggle('ro', ro);
+  $$('#sheet .sh-body input, #sheet .sh-body textarea').forEach(f => { f.readOnly = ro; });
+  $('#fFrom').innerHTML = ro ? `<i style="--c:${d.color}"></i>${esc(d.feedName)} · shared calendar · read-only` : '';
+  if (ro) { $('#shTitle').textContent = 'SHARED EVENT'; $('#fDelete').style.display = 'none'; if (!d.notes) $('#fNotes').placeholder = 'No notes'; } else $('#fNotes').placeholder = 'Notes';
+  buildCalSelect(item ? (d.cal || '') : (preset.cal ?? prefs.lastCal ?? ''));
   presentSheet($('#sheet'), sheetSource, () => { setType(t, false); validate(); });
   if (!item && !isMobile()) setTimeout(() => $('#fTitle').focus({ preventScroll: true }), 300);
 }
@@ -1035,14 +1091,18 @@ async function closeSheet() {
   a.cancel(); sheet.classList.remove('open'); sheet.style.transform = '';
   $$('input,textarea,select', sheet).forEach(i => i.blur());
 }
-function validate() { $('#shSave').disabled = !$('#fTitle').value.trim(); }
+function validate() { $('#shSave').disabled = !(editing && editing.readonly) && !$('#fTitle').value.trim(); }
 function commitSheet() {
+  if (editing && editing.readonly) return closeSheet();
   const title = $('#fTitle').value.trim(); if (!title) return;
   const hasTime = sheetType === 'task' ? allDay : !allDay;
   let start = hasTime ? $('#fStart').value || null : null, end = hasTime ? $('#fEnd').value || null : null;
   if (start && end && toMin(end) <= toMin(start)) end = addHour(start);
   const av = $('#fAlert').value;
-  const data = { title, type: sheetType, date: $('#fDate').value || null, start, end, color, notes: $('#fNotes').value.trim(), alert: av === 'none' ? null : +av };
+  const calSel = sheetType === 'event' && writableCals().length ? ($('#fCal').value || null) : (editing ? editing.cal || null : null);
+  if (sheetType === 'event' && writableCals().length) { prefs.lastCal = calSel || ''; savePrefs(); }
+  const data = { title, type: sheetType, date: $('#fDate').value || null, start, end, color, notes: $('#fNotes').value.trim(), alert: av === 'none' ? null : +av, cal: sheetType === 'event' ? calSel : null };
+  if (data.cal && !data.date) data.date = S.sel;
   let id;
   if (editing) { Object.assign(editing, data); id = editing.id; }
   else { id = uid(); S.items.push({ id, done: false, ...data }); }
@@ -1065,10 +1125,11 @@ async function deleteItem(item) {
   await Promise.all(els.map(el => el.classList.contains('row') ? collapse(el) : anim(el, [{ opacity: 1, transform: 'none', filter: 'blur(0)' }, { opacity: 0, transform: 'scale(.6)', filter: 'blur(8px)' }], { duration: 340, easing: EASE, fill: 'forwards' }).finished.catch(() => {})));
   S.items.splice(idx, 1); save(); refresh();
   lastDeleted = { item, idx };
-  toast(`Deleted “${item.title.length > 24 ? item.title.slice(0, 24) + '…' : item.title}”`);
+  toast(`Deleted “${item.title.length > 24 ? item.title.slice(0, 24) + '…' : item.title}”`, true);
 }
-function toast(msg) {
+function toast(msg, undo = false) {
   $('#toastMsg').textContent = msg; const t = $('#toast');
+  $('#toastUndo').style.display = undo ? '' : 'none';
   t.classList.add('on'); clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('on'), 4200);
 }
@@ -1093,9 +1154,9 @@ try { Object.assign(prefs, JSON.parse(localStorage.getItem(PREFS) || '{}')); } c
 const savePrefs = () => { try { localStorage.setItem(PREFS, JSON.stringify(prefs)); } catch (e) {} };
 const API = '/api/reminders';
 const human = m => m < 60 ? `${m} min` : m < 1440 ? `${m / 60} hour${m === 60 ? '' : 's'}` : '1 day';
-function reminderList() {
+function reminderList(ownOnly) {
   const now = Date.now(), horizon = now + 45 * 864e5, out = [];
-  for (const i of S.items) {
+  for (const i of (ownOnly ? S.items : allItems())) {
     if (!i.date || i.alert == null || (i.type === 'task' && i.done)) continue;
     const d = fromKey(i.date); let at, body;
     const verb = i.type === 'task' ? 'Due' : 'Starts';
@@ -1165,7 +1226,7 @@ async function syncReminders() {
   if (!token && !PUSH.sub) return false;
   if (token && !SYNC.pulled) return false; // never overwrite account alerts from a stale device before it has pulled
   try {
-    const body = { reminders: reminderList() };
+    const body = { reminders: reminderList(!!token), tz: Intl.DateTimeFormat().resolvedOptions().timeZone };
     if (PUSH.sub) body.subscription = PUSH.sub.toJSON();
     if (token) body.token = token;
     const r = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
@@ -1211,7 +1272,12 @@ function syncSectionHTML() {
 function relTime(t) { const s = Math.round((Date.now() - t) / 1000); return s < 10 ? 'just now' : s < 60 ? `${s}s ago` : s < 3600 ? `${Math.round(s / 60)} min ago` : new Date(t).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
 function renderPanel(animate) {
   if (!$('#nsheet').classList.contains('open') && !animate) return;
+  // keep whatever is being typed when the panel re-renders (sync status updates etc.)
+  const keep = {}; $$('#nBody input').forEach(i => { if (i.id) keep[i.id] = i.value; });
+  const foc = document.activeElement && document.activeElement.closest && document.activeElement.closest('#nBody') ? document.activeElement.id : null;
   renderNotif();
+  for (const [id, v] of Object.entries(keep)) { const el = document.getElementById(id); if (el && id !== 'pwIn') el.value = v; }
+  if (foc) { const el = document.getElementById(foc); if (el) el.focus({ preventScroll: true }); }
   if (animate) stagger($$('#nBody > *'), 0, 30);
 }
 function renderNotif() {
@@ -1223,7 +1289,7 @@ function renderNotif() {
   else if (PUSH.sub) { icon = '✅'; bg = 'rgba(48,209,88,.18)'; title = 'Notifications are on'; sub = SYNC.user ? 'Alerts for your whole account arrive here, even when Agenda is closed.' : 'Alerts arrive on this device even when Agenda is closed.'; actions = `<button class="btn-ghost" data-n="test">Send a test notification</button><button class="btn-ghost" data-n="off" style="color:var(--red)">Turn off on this device</button>`; }
   else { title = 'Get alerts before things start'; sub = 'Lock-screen notifications for events and tasks, timed by each item’s Alert setting.'; actions = `<button class="btn-primary" data-n="on">Enable notifications</button>`; }
   const up = reminderList().filter(r => r.at > Date.now()).slice(0, 5);
-  $('#nBody').innerHTML = syncSectionHTML() + `
+  $('#nBody').innerHTML = syncSectionHTML() + appleSectionHTML() + feedsSectionHTML() + `
     <div class="sec-label" style="padding-top:18px">NOTIFICATIONS</div>
     <div class="n-status"><div class="orb2" style="background:${bg}">${icon}</div><div><b>${title}</b><small>${sub}</small></div></div>
     ${actions}
@@ -1267,7 +1333,7 @@ async function initSync() {
     const { data } = await SYNC.client.auth.getSession();
     if (data && data.session) onSignedIn(data.session.user); else setSync('off');
   } catch (e) { setSync('error', 'Couldn’t load sync: ' + (e.message || e)); }
-  addEventListener('online', () => SYNC.user && fullSync());
+  addEventListener('online', () => { if (SYNC.user) { fullSync(); flushApple(); } });
   addEventListener('offline', () => SYNC.user && setSync('offline'));
 }
 async function signInPw(create) {
@@ -1301,6 +1367,7 @@ async function onSignedIn(user) {
   updateBell(); renderPanel(true);
   subscribeLive();
   await fullSync(true);
+  loadFeeds(); loadApple();
   if (PUSH.sub) syncReminders();
 }
 async function signOut() {
@@ -1312,12 +1379,13 @@ function onSignedOut() {
   if (!SYNC.user) return;
   try { SYNC.channel && SYNC.client.removeChannel(SYNC.channel); } catch (e) {}
   SYNC.channel = null; SYNC.user = null; SYNC.pulled = false; SYNC.dirty.clear(); SYNC.tombs.clear(); SYNC.owner = null; persist();
+  clearFeeds(); APPLE.connected = false; APPLE.calendars = []; APPLE.queue.clear(); try { localStorage.removeItem(APPLE_STORE); } catch (e) {} refresh();
   setSync('off', ''); renderPanel(true); toast('Signed out — your agenda stays on this device');
   if (PUSH.sub) syncReminders(); // fall back to device-only alerts
 }
-const toRow = i => ({ user_id: SYNC.user.id, id: i.id, type: i.type, title: i.title, date: i.date || null, start_time: i.start || null, end_time: i.end || null, color: i.color, notes: i.notes || '', alert: i.alert ?? null, done: !!i.done, done_at: i.doneAt || null, updated_at: i.u || Date.now(), deleted: false });
+const toRow = i => Object.assign({ user_id: SYNC.user.id, id: i.id, type: i.type, title: i.title, date: i.date || null, start_time: i.start || null, end_time: i.end || null, color: i.color, notes: i.notes || '', alert: i.alert ?? null, done: !!i.done, done_at: i.doneAt || null, updated_at: i.u || Date.now(), deleted: false }, (i.cal || APPLE.connected) ? { cal: i.cal || null } : {});
 const tombRow = id => ({ user_id: SYNC.user.id, id, type: 'event', title: null, date: null, start_time: null, end_time: null, color: null, notes: null, alert: null, done: false, done_at: null, updated_at: Date.now(), deleted: true });
-const fromRow = r => ({ id: r.id, type: r.type || 'event', title: r.title || '', date: r.date || null, start: r.start_time || null, end: r.end_time || null, color: r.color || COLORS[0], notes: r.notes || '', alert: r.alert ?? null, done: !!r.done, doneAt: r.done_at || null, u: Number(r.updated_at) || 0 });
+const fromRow = r => ({ id: r.id, type: r.type || 'event', title: r.title || '', date: r.date || null, start: r.start_time || null, end: r.end_time || null, color: r.color || COLORS[0], notes: r.notes || '', alert: r.alert ?? null, done: !!r.done, doneAt: r.done_at || null, cal: r.cal || null, u: Number(r.updated_at) || 0 });
 let pushT;
 function schedulePush() { if (!SYNC.user) return; clearTimeout(pushT); pushT = setTimeout(() => fullSync(false, true), 500); }
 async function pushDirty() {
@@ -1390,7 +1458,8 @@ async function fullSync(force, pushOnly) {
     if (pendingOpenId && S.items.some(i => i.id === pendingOpenId)) setTimeout(() => openItemById(pendingOpenId), 150);
     scheduleSync();
   } catch (e) {
-    setSync(navigator.onLine ? 'error' : 'offline', e.message || String(e));
+    const msg = e.message || String(e);
+    setSync(navigator.onLine ? 'error' : 'offline', /\bcal\b/.test(msg) && /column/i.test(msg) ? 'Supabase needs one more column for Apple Calendar: run the updated supabase.sql (see README).' : msg);
     setTimeout(() => SYNC.user && fullSync(), 15000);
   } finally {
     SYNC.running = false;
@@ -1408,6 +1477,217 @@ function subscribeLive() {
       .subscribe(status => { if (status === 'SUBSCRIBED' && SYNC.pulled) fullSync(); });
   } catch (e) {}
 }
+
+/* ================= Apple Calendar (iCloud CalDAV via the server) ================= */
+const APPLE = { connected: false, appleId: '', calendars: [], err: '', form: false, busy: false, armed: false, queue: new Map(), flushing: false };
+const APPLE_STORE = 'dml.agenda.apple';
+const writableCals = () => APPLE.connected ? APPLE.calendars.filter(c => c.canWrite) : [];
+function applePersist() { try { localStorage.setItem(APPLE_STORE, JSON.stringify({ owner: SYNC.owner, connected: APPLE.connected, appleId: APPLE.appleId, calendars: APPLE.calendars, queue: [...APPLE.queue] })); } catch (e) {} }
+function appleCacheLoad() {
+  try {
+    const d = JSON.parse(localStorage.getItem(APPLE_STORE) || 'null');
+    if (d && d.owner && d.owner === SYNC.owner) { APPLE.connected = !!d.connected; APPLE.appleId = d.appleId || ''; APPLE.calendars = d.calendars || []; APPLE.queue = new Map(d.queue || []); }
+  } catch (e) {}
+}
+function buildCalSelect(val) {
+  const cals = writableCals();
+  $('#fCal').innerHTML = `<option value="">Agenda only</option>` + cals.map(c => `<option value="${c.id}">${esc(c.name)}${c.shared ? ' (shared)' : ''}</option>`).join('');
+  $('#fCal').value = cals.some(c => c.id === val) ? val : '';
+  calNote();
+}
+function calNote() {
+  const c = APPLE.calendars.find(x => x.id === $('#fCal').value), n = $('#calNote');
+  n.classList.toggle('on', !!c);
+  n.innerHTML = c ? `Also saved to <b>${esc(c.name)}</b> in Apple Calendar${c.shared ? ' — everyone it’s shared with sees it and gets Apple’s usual alert' : ''}.` : '';
+}
+async function appleApi(method, body) {
+  const token = await authToken(); if (!token) throw new Error('Sign in first.');
+  const r = await fetch('/api/apple', { method, headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + token }, body: body ? JSON.stringify(body) : undefined });
+  if (r.status === 404 && method === 'GET') throw new Error('The Apple Calendar service isn’t deployed yet — push the latest files.');
+  if (!r.ok) throw new Error((await r.text()) || 'Something went wrong.');
+  return r.json();
+}
+function applyApple(d) {
+  APPLE.connected = !!d.connected; APPLE.appleId = d.appleId || ''; APPLE.calendars = d.calendars || [];
+  applePersist();
+}
+async function loadApple() {
+  if (!SYNC.user) return;
+  try { applyApple(await appleApi('GET')); APPLE.err = ''; } catch (e) { APPLE.err = e.message; }
+  renderPanel(false); flushApple();
+}
+function appleEnqueue(id, prevCal) {
+  if (!APPLE.queue.has(id)) APPLE.queue.set(id, { prevCal: prevCal || null }); // keep the oldest state Apple knows about
+  applePersist(); clearTimeout(appleT); appleT = setTimeout(flushApple, 800);
+}
+let appleT;
+const hmToUtc = (dateKey, hm) => { const [h, m] = hm.split(':').map(Number); const d = fromKey(dateKey); d.setHours(h, m, 0, 0); return d.toISOString(); };
+function applePayload(it) {
+  const allDay = !it.start;
+  return { id: it.id, title: it.title, notes: it.notes || '', allDay, date: it.date,
+    startUtc: allDay ? null : hmToUtc(it.date, it.start),
+    endUtc: allDay ? null : hmToUtc(it.date, it.end && toMin(it.end) > toMin(it.start) ? it.end : addHour(it.start)) };
+}
+async function flushApple() {
+  if (APPLE.flushing || !APPLE.queue.size || !SYNC.user || !navigator.onLine) return;
+  APPLE.flushing = true; let failed = null, sent = 0;
+  for (const [id, { prevCal }] of [...APPLE.queue]) {
+    const it = S.items.find(i => i.id === id);
+    const target = it && it.type === 'event' && it.date && it.cal ? it.cal : null;
+    try {
+      if (prevCal && prevCal !== target) await appleApi('POST', { action: 'delete', cal: prevCal, id });
+      if (target) await appleApi('POST', { action: 'upsert', cal: target, item: applePayload(it) });
+      APPLE.queue.delete(id); sent++;
+    } catch (e) { failed = e.message; if (/permission|can’t edit|no longer available/i.test(failed)) APPLE.queue.delete(id); }
+  }
+  APPLE.flushing = false; applePersist();
+  if (failed) { APPLE.err = 'Apple Calendar: ' + failed; toast(APPLE.err.length > 70 ? 'Couldn’t update Apple Calendar — see account panel' : APPLE.err); setTimeout(flushApple, 30000); }
+  else if (sent) APPLE.err = '';
+  liveRefresh(); renderPanel(false);
+}
+function appleSectionHTML() {
+  if (!SYNC.user) return '';
+  const howto = `<div class="howto"><b>1. Create an app-specific password</b> (a separate password just for Agenda that you can revoke anytime):<ol><li>Go to <b>account.apple.com</b> → <b>Sign-In and Security</b></li><li><b>App-Specific Passwords</b> → <b>+</b> → name it “Agenda” → copy it</li></ol><b>2. Make sure you can edit the shared calendar</b> — on your wife’s iPhone: Calendar → Calendars → <b>ⓘ</b> next to it → your name → <b>Allow Editing</b> on.</div>`;
+  if (!APPLE.connected) {
+    if (!APPLE.form) return `<div class="sec-label" style="padding-top:18px">APPLE CALENDAR</div>
+      <div class="n-status"><div class="orb2" style="background:rgba(255,55,95,.16)">📅</div><div><b>Add events to Apple Calendar</b><small>Put Agenda events straight onto a shared calendar so your wife sees them in her Calendar app, and show your Apple calendars here privately.</small></div></div>
+      <button class="btn-ghost" data-n="appleform">Connect Apple Calendar</button>${APPLE.err ? `<div class="hint" style="color:#ff8a80">${esc(APPLE.err)}</div>` : ''}`;
+    return `<div class="sec-label" style="padding-top:18px">APPLE CALENDAR</div>
+      <input class="mail-in" id="appleId" type="email" inputmode="email" autocomplete="off" autocapitalize="off" placeholder="Apple ID email">
+      <input class="mail-in" id="applePw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="App-specific password (xxxx-xxxx-xxxx-xxxx)">
+      ${APPLE.err ? `<div class="hint" style="color:#ff8a80">${esc(APPLE.err)}</div>` : ''}
+      <div class="btn-row"><button class="btn-ghost" data-n="applecancel">Cancel</button><button class="btn-primary" data-n="appleconnect" ${APPLE.busy ? 'disabled' : ''}>${APPLE.busy ? 'Connecting…' : 'Connect'}</button></div>${howto}`;
+  }
+  const shown = new Map(FEEDS.list.filter(f => f.kind === 'caldav').map(f => [f.cal, f]));
+  const rows = APPLE.calendars.map(c => `<div class="apple-cal" style="--c:${c.color || '#8e8e93'}"><span class="dot"></span><div class="fi"><b>${esc(c.name)}</b><small>${c.canWrite ? (c.shared ? 'SHARED · CAN ADD EVENTS' : 'YOURS · CAN ADD EVENTS') : 'READ-ONLY'}</small></div><span class="lbl">SHOW</span><button class="switch ${shown.has(c.id) ? 'on' : ''}" data-n="appleshow" data-id="${c.id}" role="switch" aria-checked="${shown.has(c.id)}" aria-label="Show ${esc(c.name)} in Agenda"></button></div>`).join('');
+  return `<div class="sec-label" style="padding-top:18px">APPLE CALENDAR</div>
+    <div class="hint">Connected as <b>${esc(APPLE.appleId)}</b>${APPLE.queue.size ? ` · ${APPLE.queue.size} change${APPLE.queue.size > 1 ? 's' : ''} waiting to send` : ''}. Choose a calendar when you add an event to put it there too.</div>
+    <div class="group">${rows || '<div class="hint" style="padding:12px">No calendars found.</div>'}</div>
+    ${APPLE.err ? `<div class="hint" style="color:#ff8a80">${esc(APPLE.err)}</div>` : ''}
+    <div class="btn-row"><button class="btn-ghost" data-n="applerefresh">Refresh list</button><button class="btn-ghost" data-n="appledisconnect" style="color:var(--red)">${APPLE.armed ? 'Tap to confirm' : 'Disconnect'}</button></div>`;
+}
+const appleActions = {
+  appleform: async () => { APPLE.form = true; APPLE.err = ''; renderPanel(true); setTimeout(() => $('#appleId')?.focus({ preventScroll: true }), 250); },
+  applecancel: async () => { APPLE.form = false; APPLE.err = ''; renderPanel(true); },
+  appleconnect: async () => {
+    APPLE.busy = true; APPLE.err = ''; renderPanel(false);
+    try {
+      applyApple(await appleApi('POST', { action: 'connect', appleId: $('#appleId').value, password: $('#applePw').value }));
+      APPLE.form = false; buzz([8, 50, 12]);
+      toast(`Connected · ${APPLE.calendars.length} calendar${APPLE.calendars.length === 1 ? '' : 's'}`);
+      if ($('#applePw')) $('#applePw').value = '';
+    } catch (e) { APPLE.err = e.message; buzz([20, 40, 20]); }
+    APPLE.busy = false; renderPanel(true); liveRefresh();
+  },
+  applerefresh: async () => { try { applyApple(await appleApi('POST', { action: 'refresh' })); APPLE.err = ''; toast('Calendar list updated'); } catch (e) { APPLE.err = e.message; } renderPanel(false); },
+  appledisconnect: async () => {
+    if (!APPLE.armed) { APPLE.armed = true; renderPanel(false); setTimeout(() => { APPLE.armed = false; renderPanel(false); }, 3000); return; }
+    APPLE.armed = false;
+    try { applyApple(await appleApi('POST', { action: 'disconnect' })); APPLE.queue.clear(); applePersist(); toast('Apple Calendar disconnected'); loadFeeds(); } catch (e) { APPLE.err = e.message; }
+    renderPanel(true); liveRefresh();
+  },
+  appleshow: async (b) => {
+    const id = b.dataset.id, existing = FEEDS.list.find(f => f.kind === 'caldav' && f.cal === id), cal = APPLE.calendars.find(c => c.id === id);
+    b.classList.toggle('on', !existing); buzz(4);
+    try {
+      applyFeeds(await feedsApi('POST', existing ? { action: 'remove', id: existing.id } : { action: 'addApple', cal: id, color: cal && cal.color || '#ff9f0a', alert: null }));
+      if (!existing) toast(`Showing ${cal ? cal.name : 'calendar'} in Agenda`);
+    } catch (e) { APPLE.err = e.message; b.classList.toggle('on', !!existing); }
+    renderPanel(false);
+  }
+};
+
+/* ================= shared calendars (read-only .ics subscriptions) ================= */
+const FEEDS = { list: [], items: [], at: 0, loading: false, err: '', adding: false, addErr: '', addColor: '#ff9f0a', armed: null, busy: false };
+const FEEDS_STORE = 'dml.agenda.feeds';
+let feedRaw = [];
+function feedCacheLoad() {
+  try {
+    const d = JSON.parse(localStorage.getItem(FEEDS_STORE) || 'null');
+    if (d && d.owner && d.owner === SYNC.owner) { FEEDS.list = d.list || []; buildFeedItems(d.events || []); FEEDS.at = d.at || 0; }
+  } catch (e) {}
+}
+function buildFeedItems(events) {
+  feedRaw = events;
+  const byId = new Map(FEEDS.list.map(f => [f.id, f])), out = [];
+  const hm = d => pad(d.getHours()) + ':' + pad(d.getMinutes());
+  for (const e of events) {
+    const f = byId.get(e.feed); if (!f) continue;
+    if (e.uid && e.uid.startsWith('agenda-')) continue; // written by Agenda — the original item is already shown
+    const base = { type: 'event', readonly: true, feed: f.id, feedName: f.name, title: e.title, color: f.color, notes: [e.location ? '📍 ' + e.location : '', e.notes || ''].filter(Boolean).join('\n'), alert: f.alert ?? null, done: false };
+    if (e.allDay) {
+      let d = fromKey(e.date); const end = fromKey(e.endDate);
+      for (let n = 0; d < end && n < 31; n++, d = addDays(d, 1)) out.push({ ...base, id: 'feed:' + e.id + (n ? ':' + n : ''), date: key(d), start: null, end: null });
+    } else {
+      const st = new Date(e.start), en = new Date(e.end);
+      out.push({ ...base, id: 'feed:' + e.id, date: key(st), start: hm(st), end: key(en) === key(st) ? hm(en) : '23:59' });
+    }
+  }
+  FEEDS.items = out;
+}
+function applyFeeds(d) {
+  FEEDS.list = d.feeds || []; buildFeedItems(d.events || []); FEEDS.at = Date.now();
+  try { localStorage.setItem(FEEDS_STORE, JSON.stringify({ owner: SYNC.owner, list: FEEDS.list, events: feedRaw, at: FEEDS.at })); } catch (e) {}
+  liveRefresh();
+  if (pendingOpenId && findItem(pendingOpenId)) setTimeout(() => openItemById(pendingOpenId), 150);
+}
+async function feedsApi(method, body, query = '') {
+  const token = await authToken(); if (!token) throw new Error('Sign in first.');
+  const r = await fetch('/api/feeds' + query, { method, headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + token }, body: body ? JSON.stringify(body) : undefined });
+  if (r.status === 404 && !body) throw new Error('The calendar service isn’t deployed yet — push the latest files.');
+  if (!r.ok) throw new Error((await r.text()) || 'Something went wrong.');
+  return r.json();
+}
+async function loadFeeds(force) {
+  if (!SYNC.user || FEEDS.loading) return;
+  FEEDS.loading = true;
+  try { applyFeeds(await feedsApi('GET', null, force ? '?refresh=1' : '')); FEEDS.err = ''; }
+  catch (e) { FEEDS.err = e.message || String(e); }
+  FEEDS.loading = false; renderPanel(false);
+}
+function clearFeeds() { FEEDS.list = []; FEEDS.items = []; feedRaw = []; FEEDS.at = 0; try { localStorage.removeItem(FEEDS_STORE); } catch (e) {} }
+const ALERT_OPTS = [['none', 'Off'], ['0', 'At time'], ['10', '10 min'], ['15', '15 min'], ['30', '30 min'], ['60', '1 hour'], ['1440', '1 day']];
+const alertSelect = (attrs, val) => `<select ${attrs}>${ALERT_OPTS.map(([v, l]) => `<option value="${v}" ${String(val ?? 'none') === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+function feedsSectionHTML() {
+  if (!SYNC.user) return SYNC.status === 'unconfigured' ? '' : `<div class="sec-label" style="padding-top:18px">SHARED CALENDARS</div><div class="hint">Sign in above to connect Apple Calendar and show shared calendars.</div>`;
+  const rows = FEEDS.list.map(f => `<div class="feed-row" style="--c:${f.color}"><span class="dot"></span><div class="fi"><b>${esc(f.name)}</b><small class="${f.error ? 'bad' : ''}">${f.error ? esc(f.error).toUpperCase() : `${f.count} EVENTS · ${f.updated ? 'UPDATED ' + relTime(f.updated).toUpperCase() : 'WAITING'}`}</small></div>${alertSelect(`data-feed-alert="${f.id}" aria-label="Alerts"`, f.alert)}<button class="feed-x ${FEEDS.armed === f.id ? 'armed' : ''}" data-n="feedx" data-id="${f.id}" aria-label="Remove">${FEEDS.armed === f.id ? 'REMOVE' : '×'}</button></div>`).join('');
+  const form = `<input class="mail-in" id="feedUrl" inputmode="url" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="Paste link: webcal://…icloud.com/published/…">
+    <input class="mail-in" id="feedName" autocomplete="off" placeholder="Name (optional, e.g. Family)">
+    <div class="group"><div class="r"><label>Alerts for its events</label>${alertSelect('id="feedAlert"', 'none')}</div></div>
+    <div class="group"><div class="r"><div class="swatches">${COLORS.map(c => `<button class="sw ${c === FEEDS.addColor ? 'on' : ''}" data-fc="${c}" style="--c:${c}" aria-label="color"></button>`).join('')}</div></div></div>
+    ${FEEDS.addErr ? `<div class="hint" style="color:#ff8a80">${esc(FEEDS.addErr)}</div>` : ''}
+    <div class="btn-row"><button class="btn-ghost" data-n="feedcancel">Cancel</button><button class="btn-primary" data-n="feedsave" ${FEEDS.busy ? 'disabled' : ''}>${FEEDS.busy ? 'Adding…' : 'Add calendar'}</button></div>
+    <div class="howto"><b>Getting the link</b> — on the iPhone of whoever <b>owns</b> the shared calendar:<ol><li>Open <b>Calendar</b> → tap <b>Calendars</b></li><li>Tap <b>ⓘ</b> next to the shared calendar</li><li>Turn on <b>Public Calendar</b> → <b>Share Link</b> → <b>Copy</b></li></ol>Anyone with the link can view that calendar, so keep it private.</div>`;
+  return `<div class="sec-label" style="padding-top:18px">CALENDARS SHOWN IN AGENDA</div>
+    ${rows ? `<div class="group">${rows}</div>` : ''}
+    ${FEEDS.adding ? form : `<div class="btn-row"><button class="btn-ghost" data-n="feedadd">＋ Add by public link</button>${FEEDS.list.length ? `<button class="btn-ghost" data-n="feedrefresh" style="flex:.5">${FEEDS.loading ? 'Refreshing…' : 'Refresh'}</button>` : ''}</div>`}
+    ${FEEDS.err ? `<div class="hint" style="color:#ff8a80">${esc(FEEDS.err)}</div>` : ''}`;
+}
+const feedActions = {
+  feedadd: async () => { FEEDS.adding = true; FEEDS.addErr = ''; renderPanel(true); setTimeout(() => $('#feedUrl')?.focus({ preventScroll: true }), 250); },
+  feedcancel: async () => { FEEDS.adding = false; FEEDS.addErr = ''; renderPanel(true); },
+  feedrefresh: () => loadFeeds(true),
+  feedsave: async () => {
+    const url = ($('#feedUrl')?.value || '').trim();
+    if (!url) { FEEDS.addErr = 'Paste the calendar link first.'; renderPanel(false); return; }
+    FEEDS.busy = true; FEEDS.addErr = ''; renderPanel(false);
+    try {
+      const av = $('#feedAlert').value;
+      const d = await feedsApi('POST', { action: 'add', url, name: ($('#feedName')?.value || '').trim(), color: FEEDS.addColor, alert: av === 'none' ? null : +av });
+      FEEDS.adding = false; applyFeeds(d);
+      const f = d.feeds[d.feeds.length - 1]; toast(`Added ${f.name} · ${f.count} events`); buzz([8, 50, 12]);
+      $('#feedUrl') && ($('#feedUrl').value = ''); $('#feedName') && ($('#feedName').value = '');
+    } catch (e) { FEEDS.addErr = e.message; buzz([20, 40, 20]); }
+    FEEDS.busy = false; renderPanel(!FEEDS.adding);
+  },
+  feedx: async (b) => {
+    const id = b.dataset.id;
+    if (FEEDS.armed !== id) { FEEDS.armed = id; renderPanel(false); setTimeout(() => { if (FEEDS.armed === id) { FEEDS.armed = null; renderPanel(false); } }, 3000); return; }
+    FEEDS.armed = null;
+    try { applyFeeds(await feedsApi('POST', { action: 'remove', id })); toast('Calendar removed'); } catch (e) { FEEDS.err = e.message; }
+    renderPanel(true);
+  }
+};
 
 /* "new item" pushes to the account's other devices */
 function deviceName() {
@@ -1463,7 +1743,7 @@ function showBanner(r) {
 }
 let pendingOpenId = null;
 function openItemById(id) {
-  const it = S.items.find(i => i.id === id);
+  const it = findItem(id);
   if (!it) { if (SYNC.user) { pendingOpenId = id; fullSync(); } return; } // not synced here yet: open once it arrives
   pendingOpenId = null;
   if (activeSheet) closeSheet();
@@ -1473,7 +1753,8 @@ function openItemById(id) {
   } else setTimeout(() => openSheet(it, $(`.page.current [data-id="${id}"]`) || $('#addBtn')), 60);
 }
 setInterval(checkDue, 15000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkDue(); if (SYNC.user) fullSync(); else if (PUSH.sub && Date.now() - PUSH.lastSync > 6e5) syncReminders(); const p = $('.page.current'); if (p) drawNow(p); } });
+setInterval(() => { if (SYNC.user && document.visibilityState === 'visible') loadFeeds(); }, 10 * 60000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkDue(); if (SYNC.user) { fullSync(); flushApple(); if (Date.now() - FEEDS.at > 5 * 60000) loadFeeds(); } else if (PUSH.sub && Date.now() - PUSH.lastSync > 6e5) syncReminders(); const p = $('.page.current'); if (p) drawNow(p); } });
 
 /* ================= events ================= */
 function bind() {
@@ -1493,9 +1774,14 @@ function bind() {
   $('#nBody').addEventListener('click', e => {
     const b = e.target.closest('[data-n]'); if (!b) return;
     b.disabled = true;
-    ({ on: enablePush, off: disablePush, test: testPush, signin: () => signInPw(false), create: () => signInPw(true), signout: signOut, syncnow: () => fullSync(true), togglenew: async () => { prefs.notifyNew = prefs.notifyNew === false; savePrefs(); b.classList.toggle('on', prefs.notifyNew); b.setAttribute('aria-checked', prefs.notifyNew); buzz(4); } })[b.dataset.n]().finally(() => { b.disabled = false; });
+    ({ on: enablePush, off: disablePush, test: testPush, signin: () => signInPw(false), create: () => signInPw(true), signout: signOut, syncnow: () => fullSync(true), ...Object.fromEntries(Object.entries(feedActions).map(([k, f]) => [k, () => f(b)])), ...Object.fromEntries(Object.entries(appleActions).map(([k, f]) => [k, () => f(b)])), togglenew: async () => { prefs.notifyNew = prefs.notifyNew === false; savePrefs(); b.classList.toggle('on', prefs.notifyNew); b.setAttribute('aria-checked', prefs.notifyNew); buzz(4); } })[b.dataset.n]().finally(() => { b.disabled = false; });
   });
-  $('#nBody').addEventListener('change', e => { if (e.target.id === 'nDefault') { prefs.defaultAlert = e.target.value === 'none' ? 'none' : +e.target.value; savePrefs(); buzz(4); } });
+  $('#nBody').addEventListener('click', e => {
+    const sw = e.target.closest('[data-fc]'); if (!sw) return;
+    FEEDS.addColor = sw.dataset.fc; $$('#nBody [data-fc]').forEach(x => x.classList.toggle('on', x === sw)); buzz(4);
+  });
+  $('#nBody').addEventListener('change', e => {
+    if (e.target.dataset.feedAlert) { const v = e.target.value; feedsApi('POST', { action: 'update', id: e.target.dataset.feedAlert, alert: v === 'none' ? null : +v }).then(applyFeeds).catch(err => { FEEDS.err = err.message; renderPanel(false); }); buzz(4); return; } if (e.target.id === 'nDefault') { prefs.defaultAlert = e.target.value === 'none' ? 'none' : +e.target.value; savePrefs(); buzz(4); } });
 
   const stage = $('#stage');
   stage.addEventListener('pointerdown', onDown);
@@ -1513,7 +1799,7 @@ function bind() {
     }
     const idEl = e.target.closest('.row[data-id], .ev[data-id], .chip[data-id]');
     if (idEl && !e.target.closest('#sheet')) { if (e.target.closest('#nsheet')) { const id = idEl.dataset.id; closeSheet().then(() => openItemById(id)); return; } }
-    if (idEl && !e.target.closest('#sheet') && !e.target.closest('#nsheet')) { const it = S.items.find(i => i.id === idEl.dataset.id); if (it) return openSheet(it, idEl); }
+    if (idEl && !e.target.closest('#sheet') && !e.target.closest('#nsheet')) { const it = findItem(idEl.dataset.id); if (it) return openSheet(it, idEl); }
     const day = e.target.closest('[data-day]');
     if (day && e.target.closest('#stage')) {
       const k = day.dataset.day;
@@ -1541,6 +1827,7 @@ function bind() {
   $('#fColors').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; color = b.dataset.c; $$('.sw').forEach(s => s.classList.toggle('on', s === b)); buzz(4); });
   $('#fStart').addEventListener('change', () => { if (toMin($('#fEnd').value || '00:00') <= toMin($('#fStart').value)) $('#fEnd').value = addHour($('#fStart').value); });
   $('#fDelete').onclick = () => editing && deleteItem(editing);
+  $('#fCal').addEventListener('change', () => { calNote(); buzz(4); });
   $('#toastUndo').onclick = () => {
     if (!lastDeleted) return; S.items.splice(lastDeleted.idx, 0, lastDeleted.item); save();
     const id = lastDeleted.item.id; lastDeleted = null; $('#toast').classList.remove('on'); refresh(id); buzz(6);
@@ -1680,6 +1967,8 @@ function afterIntro() {
   checkDue();
 }
 load();
+feedCacheLoad();
+appleCacheLoad();
 if (S.view === 'day') S.cursor = fromKey(S.sel);
 bind();
 swap('none');

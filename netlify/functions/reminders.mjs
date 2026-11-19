@@ -8,6 +8,8 @@
 import { getStore } from '@netlify/blobs';
 import * as webpush from 'web-push';
 import { createHash } from 'node:crypto';
+import { userIdFromToken } from '../lib/auth.mjs';
+import { sendToSubs } from '../lib/push.mjs';
 
 const deviceKey = endpoint => createHash('sha256').update(endpoint).digest('hex').slice(0, 40);
 const ALLOWED_PUSH_HOSTS = /(^|\.)(push\.apple\.com|fcm\.googleapis\.com|push\.services\.mozilla\.com|notify\.windows\.com|push\.api\.chromium\.org)$/;
@@ -18,14 +20,6 @@ function validSub(sub) {
     const u = new URL(sub.endpoint);
     return u.protocol === 'https:' && ALLOWED_PUSH_HOSTS.test(u.hostname);
   } catch { return false; }
-}
-async function userIdFromToken(token) {
-  const { SUPABASE_URL, SUPABASE_ANON_KEY } = process.env;
-  if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
-  const r = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` } });
-  if (!r.ok) return null;
-  const u = await r.json();
-  return u && u.id ? String(u.id) : null;
 }
 const cleanReminders = list => (Array.isArray(list) ? list : []).slice(0, 400).map(r => ({
   id: String(r.id).slice(0, 80), item: String(r.item).slice(0, 40), at: Number(r.at),
@@ -66,19 +60,13 @@ export default async (req) => {
     // push "new item" to every device on the account except the one that created it
     const uid = await userIdFromToken(body.token);
     if (!uid) return new Response('Not signed in', { status: 401 });
-    if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) return Response.json({ ok: true, sent: 0 });
-    webpush.setVapidDetails(VAPID_SUBJECT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY);
     const it = body.item || {};
     const id = String(it.id || '').slice(0, 40);
-    const payload = JSON.stringify({ title: String(it.title || 'New item').slice(0, 120), body: String(it.body || '').slice(0, 200), tag: 'new-' + id, item: id, url: `/?item=${encodeURIComponent(id)}` });
+    const payload = { title: String(it.title || 'New item').slice(0, 120), body: String(it.body || '').slice(0, 200), tag: 'new-' + id, item: id, url: `/?item=${encodeURIComponent(id)}` };
     const key = 'u_' + uid;
     const data = await store.get(key, { type: 'json' });
     const subs = (data && data.subs || []).filter(s => s.endpoint !== body.exclude);
-    const dead = new Set(); let sent = 0;
-    await Promise.all(subs.map(async sub => {
-      try { await webpush.sendNotification(sub, payload, { TTL: 86400, urgency: 'normal' }); sent++; }
-      catch (e) { if (e.statusCode === 404 || e.statusCode === 410) dead.add(sub.endpoint); }
-    }));
+    const { dead, sent } = await sendToSubs(subs, payload, { TTL: 86400, urgency: 'normal' });
     if (dead.size) await store.setJSON(key, { ...data, subs: data.subs.filter(s => !dead.has(s.endpoint)) });
     return Response.json({ ok: true, sent });
   }
@@ -98,7 +86,9 @@ export default async (req) => {
       subs = subs.filter(s => s.endpoint !== sub.endpoint).concat(sub).slice(-12);
       await store.delete(deviceKey(sub.endpoint)); // this device now gets account alerts instead
     }
-    await store.setJSON(key, { subs, reminders, sent: (prev.sent || []).filter(id => ids.has(id)), updated: Date.now() });
+    const feedIds = new Set((prev.feedReminders || []).map(r => r.id));
+    const tz = typeof body.tz === 'string' && body.tz.length < 64 ? body.tz : prev.tz;
+    await store.setJSON(key, { ...prev, subs, reminders, tz, sent: (prev.sent || []).filter(id => ids.has(id) || feedIds.has(id)), updated: Date.now() });
     return Response.json({ ok: true, count: reminders.length, devices: subs.length });
   }
 
